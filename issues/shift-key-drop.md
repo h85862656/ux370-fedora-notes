@@ -27,7 +27,7 @@
 
 ## 修復方式
 
-把 200ms 門檻改成 500ms（並修正過期的註解）。Patch:
+把 200ms 門檻改成 500ms（並修正過期的註解）。Patch 檔案：[`patches/ibus-chewing-shift-500ms.patch`](../patches/ibus-chewing-shift-500ms.patch)
 
 ```diff
 diff --git a/src/ibus-chewing-preedit.c b/src/ibus-chewing-preedit.c
@@ -65,7 +65,7 @@ index 33fdf7a..28a75b6 100644
 sudo dnf builddep -y ibus-chewing
 git clone --branch v2.1.7 https://github.com/chewing/ibus-chewing.git
 cd ibus-chewing
-# 套用上面的 patch 到 src/ibus-chewing-preedit.c
+git apply /path/to/patches/ibus-chewing-shift-500ms.patch
 meson setup --prefix=/usr build
 ninja -C build
 

@@ -35,6 +35,10 @@
 這個修復是通用的（不是寫死這台筆電的路徑/數值）,因為問題本身是通用的非同步讀取 race condition,
 不是這個硬體特有的問題。
 
+修好之後的完整檔案備份在：[`patches/batt-watt-power-monitor-upower.js`](../patches/batt-watt-power-monitor-upower.js)
+（這是完整檔案,不是 diff——因為當初沒有留原始未修改版本可以比對。重灌後如果上游還沒合併,
+直接把這個檔案複製過去蓋掉 `~/.local/share/gnome-shell/extensions/batt-watt-power-monitor@DarkPhilosophy/library/upower.js` 即可）。
+
 ## 更新後會被覆蓋的風險
 
 這是修改 GNOME Shell 擴充功能本身的檔案（`~/.local/share/gnome-shell/extensions/...`）,

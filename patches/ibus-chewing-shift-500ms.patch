@@ -1,0 +1,28 @@
+diff --git a/src/ibus-chewing-preedit.c b/src/ibus-chewing-preedit.c
+index 33fdf7a..28a75b6 100644
+--- a/src/ibus-chewing-preedit.c
++++ b/src/ibus-chewing-preedit.c
+@@ -381,9 +381,9 @@ EventResponse self_handle_shift_left(IBusChewingPreEdit *self, KSym kSym,
+         return EVENT_RESPONSE_IGNORE;
+     }
+ 
+-    /* Ignore the Shift key if hold more than 100 ms */
++    /* Ignore the Shift key if hold more than 500 ms */
+     gint64 currTs = g_get_monotonic_time();
+-    if (currTs - self->keyLastTs > 200 * G_TIME_SPAN_MILLISECOND) {
++    if (currTs - self->keyLastTs > 500 * G_TIME_SPAN_MILLISECOND) {
+         return EVENT_RESPONSE_IGNORE;
+     }
+ 
+@@ -415,9 +415,9 @@ EventResponse self_handle_shift_right(IBusChewingPreEdit *self, KSym kSym,
+         return EVENT_RESPONSE_IGNORE;
+     }
+ 
+-    /* Ignore the Shift key if hold more than 100 ms */
++    /* Ignore the Shift key if hold more than 500 ms */
+     gint64 currTs = g_get_monotonic_time();
+-    if (currTs - self->keyLastTs > 200 * G_TIME_SPAN_MILLISECOND) {
++    if (currTs - self->keyLastTs > 500 * G_TIME_SPAN_MILLISECOND) {
+         return EVENT_RESPONSE_IGNORE;
+     }
+ 
