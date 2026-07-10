@@ -70,7 +70,7 @@
 | 4 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 未開始 | [todo/04](todo/04-ssd-repartition.md) |
 | 5 | 確認側邊音量鍵是否正常 | 未開始 | [todo/05](todo/05-volume-key-check.md) |
 | 6 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 未開始 | [todo/06](todo/06-fingerprint-reader.md) |
-| 7 | 觸控板雙指捲動速度太快，想調慢 30% | 進行中 | [todo/07](todo/07-touchpad-scroll-speed.md) |
+| 7 | 觸控板雙指捲動速度太快，想調慢 30% | 卡住待討論 | [todo/07](todo/07-touchpad-scroll-speed.md) |
 | 8 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 未開始 | [todo/08](todo/08-chrome-shutdown-grace-period.md) |
 | 9 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 未開始 | [todo/09](todo/09-line-extension-standalone-icon.md) |
 
