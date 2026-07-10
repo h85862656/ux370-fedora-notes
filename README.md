@@ -66,7 +66,7 @@
 | 2b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 未開始 | [todo/02b](todo/02b-hinge-angle-sensor.md) |
 | 2c | 新增手動按鈕：一鍵進入/退出平板模式 | 未開始 | [todo/02c](todo/02c-tablet-mode-button.md) |
 | 2d | 平板模式下自動關觸控板 + 自動旋轉開關按鈕 | 未開始 | [todo/02d](todo/02d-tablet-mode-peripherals.md) |
-| 3 | Claude Code 完成/等待回覆時跳出系統通知 | 進行中 | [todo/03](todo/03-claude-code-notifications.md) |
+| 3 | Claude Code 完成/等待回覆時跳出系統通知 | 已完成 | [todo/03](todo/03-claude-code-notifications.md) |
 | 4 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 未開始 | [todo/04](todo/04-ssd-repartition.md) |
 | 5 | 確認側邊音量鍵是否正常 | 未開始 | [todo/05](todo/05-volume-key-check.md) |
 | 6 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 未開始 | [todo/06](todo/06-fingerprint-reader.md) |

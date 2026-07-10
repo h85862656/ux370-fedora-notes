@@ -1,6 +1,6 @@
 # 3. Claude Code 在終端機完成工作、或等待使用者回覆選項時，跳出系統通知
 
-**狀態**：進行中
+**狀態**：已完成
 **認領視窗**：2026-07-10 / claude-code-notifications
 
 ## 目標
@@ -13,4 +13,45 @@
 
 ## 進度與發現
 
-參考資料：使用者在 Windows 11 上已經有一套可用的做法（PowerShell 播放 `.wav`），機制同樣是掛 `Stop` + `Notification` 這兩個 hook 事件，只是指令換成 Windows 專用的播放方式。詳見 [reference/claude-notification-hook-windows](../reference/claude-notification-hook-windows/README.md)。Linux 這邊要改用 `notify-send` + `paplay`（或其他播放指令），不能直接照抄 PowerShell 指令。
+參考資料：使用者在 Windows 11 上已經有一套可用的做法（PowerShell 播放 `.wav`），機制同樣是掛 `Stop` + `Notification` 這兩個 hook 事件，只是指令換成 Windows 專用的播放方式。詳見 [reference/claude-notification-hook-windows](../reference/claude-notification-hook-windows/README.md)。
+
+### 實際做法（Fedora / GNOME）
+
+發現這台機器沒裝 `paplay`（PulseAudio 指令，Windows 筆記裡查到的建議是這個），改用系統內建的 PipeWire 指令 `pw-play` 播放音效，兩者都用 `notify-send` 跳 GNOME 桌面通知。
+
+全域設定寫在 `~/.claude/settings.json`（套用到所有專案），新增的 `hooks` 區塊：
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send 'Claude Code' '工作完成' && pw-play /usr/share/sounds/freedesktop/stereo/service-logout.oga"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send 'Claude Code' '等待你的回覆' && pw-play /usr/share/sounds/freedesktop/stereo/service-login.oga"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+- `Stop`（工作完成）→ 播 `service-logout.oga`
+- `Notification`（等待使用者回覆，包含權限提示、選擇題等）→ 播 `service-login.oga`
+- 兩個音效檔都是系統內建的 `/usr/share/sounds/freedesktop/stereo/` 底下的檔案，不需要額外安裝或攜帶檔案。
+
+**驗證**：實際觸發過一次 Stop（工作完成有跳通知+聲音）與一次 Notification（跳出選擇題有跳通知+聲音），使用者現場確認兩者都正常運作。
+
+**注意事項**：`~/.claude/settings.json` 是使用者層級設定，不受這台筆電硬體影響，理論上换到其他 Linux 機器只要確認 `notify-send`、`pw-play` 存在（或换成該機器上可用的播放指令）就能直接沿用。如果之後系統改用 PulseAudio 而不是 PipeWire，`pw-play` 可能要换回 `paplay`。
