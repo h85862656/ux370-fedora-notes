@@ -13,4 +13,4 @@
 
 ## 進度與發現
 
-（尚無記錄）
+參考資料：使用者在 Windows 11 上已經有一套可用的做法（PowerShell 播放 `.wav`），機制同樣是掛 `Stop` + `Notification` 這兩個 hook 事件，只是指令換成 Windows 專用的播放方式。詳見 [reference/claude-notification-hook-windows](../reference/claude-notification-hook-windows/README.md)。Linux 這邊要改用 `notify-send` + `paplay`（或其他播放指令），不能直接照抄 PowerShell 指令。
