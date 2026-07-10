@@ -9,6 +9,24 @@
 - 系統：Fedora 44
 - 桌面環境：GNOME Shell 50.2
 
+## 問題清單
+
+已經診斷、修復過的問題。
+
+| 問題 | 狀態 | 筆記 |
+|---|---|---|
+| Shift 單擊切換中英文偶爾失效（掉鍵） | 已本機修復,已回報上游（Codeberg）,等待回覆 | [issues/shift-key-drop.md](issues/shift-key-drop.md) |
+| 電池瓦數顯示錯誤（GNOME 擴充功能） | 已修復,已回報上游 | [issues/battery-wattage-display.md](issues/battery-wattage-display.md) |
+
+### 檔案格式說明
+
+每個問題一個檔案,內容包含:
+- 症狀 / 如何重現
+- 根本原因
+- 修復方式(含指令)
+- 修復是否會被系統更新覆蓋掉、要注意什麼
+- 上游回報連結
+
 ## 待處理項目
 
 正在規劃/進行中的目標清單，細節放在 `todo/` 資料夾，每個項目一個檔案。
@@ -35,7 +53,7 @@
    - 同步更新下面總覽表格裡這個項目的「狀態」欄位
 5. `git add` + `commit`（commit message 標明項目編號）+ `push`。
 6. 如果 push 時發現別的視窗也改了同一個檔案（包括這份 README 的表格）導致衝突，正常解衝突即可，不要整份用自己的版本覆蓋過去。
-7. 新增待補項目時：在 `todo/` 資料夾建立新檔案（比照既有檔案格式：狀態 / 認領視窗 / 目標 / 背景 / 進度與發現），並在下面表格新增一列。
+7. 新增待補項目時：在 `todo/` 資料夾建立新檔案（比照既有檔案格式：狀態 / 認領視窗 / 目標 / 背景 / 進度與發現），編號接續目前最大的號碼往下加（不要留空號、也不要重複用已經刪除/搬移過的舊編號），並在下面表格新增一列。
 
 **狀態選項**：`未開始` / `進行中` / `已完成` / `卡住待討論` / `暫緩`
 
@@ -53,24 +71,8 @@
 | 5 | 確認側邊音量鍵是否正常 | 未開始 | [todo/05](todo/05-volume-key-check.md) |
 | 6 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 未開始 | [todo/06](todo/06-fingerprint-reader.md) |
 | 7 | 觸控板雙指捲動速度太快，想調慢 30% | 未開始 | [todo/07](todo/07-touchpad-scroll-speed.md) |
-| 9 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 未開始 | [todo/09](todo/09-chrome-shutdown-grace-period.md) |
-| 10 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 未開始 | [todo/10](todo/10-line-extension-standalone-icon.md) |
-
-## 問題清單
-
-| 問題 | 狀態 | 筆記 |
-|---|---|---|
-| Shift 單擊切換中英文偶爾失效（掉鍵） | 已本機修復,已回報上游（Codeberg）,等待回覆 | [issues/shift-key-drop.md](issues/shift-key-drop.md) |
-| 電池瓦數顯示錯誤（GNOME 擴充功能） | 已修復,已回報上游 | [issues/battery-wattage-display.md](issues/battery-wattage-display.md) |
-
-## 使用方式
-
-每個問題一個檔案,內容包含:
-- 症狀 / 如何重現
-- 根本原因
-- 修復方式(含指令)
-- 修復是否會被系統更新覆蓋掉、要注意什麼
-- 上游回報連結
+| 8 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 未開始 | [todo/08](todo/08-chrome-shutdown-grace-period.md) |
+| 9 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 未開始 | [todo/09](todo/09-line-extension-standalone-icon.md) |
 
 ## 參考資料
 
