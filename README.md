@@ -13,7 +13,7 @@
 
 | 問題 | 狀態 | 筆記 |
 |---|---|---|
-| Shift 單擊切換中英文偶爾失效（掉鍵） | 已本機修復,已回報上游 | [issues/shift-key-drop.md](issues/shift-key-drop.md) |
+| Shift 單擊切換中英文偶爾失效（掉鍵） | 已本機修復,已回報上游（Codeberg）,等待回覆 | [issues/shift-key-drop.md](issues/shift-key-drop.md) |
 | 電池瓦數顯示錯誤（GNOME 擴充功能） | 已修復,已回報上游 | [issues/battery-wattage-display.md](issues/battery-wattage-display.md) |
 
 ## 使用方式

@@ -93,5 +93,8 @@ dnf history list | grep -i chewing
 
 ## 上游回報
 
-- Issue: https://github.com/chewing/ibus-chewing/issues/290
-- 已附上 patch（diff 格式留言）,狀態：等待回覆
+- GitHub issue（唯讀鏡像,已由作者確認不會處理）：https://github.com/chewing/ibus-chewing/issues/290
+  - 作者 kanru 回覆：「本 repo 是唯讀模式，請至 https://codeberg.org/chewing/ibus-chewing/issues 開 issue」
+- **實際追蹤處（Codeberg,主要開發現場）**：https://codeberg.org/chewing/ibus-chewing/issues/302
+  - 內容與 GitHub 那則相同（中英雙語 + 診斷過程 + patch diff）,狀態：已送出,等待回覆
+- 附註：chewing/ibus-chewing 主要開發已轉移到 Codeberg,GitHub 上只留唯讀鏡像方便搜尋,之後回報進度以 Codeberg 為準
