@@ -26,11 +26,11 @@ issues/on-hold/      暫緩 On Hold
 
 | # | 項目 Item | 狀態 Status | 詳細內容 Details |
 |---|---|---|---|
-| — | Shift 單擊切換中英文偶爾失效（掉鍵） | 已完成 Complete | [issues/complete/shift-key-drop.md](issues/complete/shift-key-drop.md)（本機已修復，已回報上游 Codeberg，尚未合併） |
-| — | 電池瓦數顯示錯誤（GNOME 擴充功能） | 已完成 Complete | [issues/complete/battery-wattage-display.md](issues/complete/battery-wattage-display.md)（已回報上游，等待回覆） |
+| 00 | 電池瓦數顯示錯誤（GNOME 擴充功能） | 已完成 Complete | [issues/complete/00-battery-wattage-display.md](issues/complete/00-battery-wattage-display.md)（已回報上游，等待回覆） |
+| 01a | Shift 單擊切換中英文偶爾失效（掉鍵） | 已完成 Complete | [issues/complete/01a-shift-key-drop.md](issues/complete/01a-shift-key-drop.md)（本機已修復，已回報上游 Codeberg，尚未合併） |
+| 01b | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) |
 | 3 | Claude Code 完成/等待回覆時跳出系統通知 | 已完成 Complete | [issues/complete/03-claude-code-notifications.md](issues/complete/03-claude-code-notifications.md) |
 | 7 | 觸控板雙指捲動速度太快，想調慢 30% | 卡住待討論 Blocked | [issues/blocked/07-touchpad-scroll-speed.md](issues/blocked/07-touchpad-scroll-speed.md) |
-| 1 | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [issues/to-do/01-power-saver-ime-icon.md](issues/to-do/01-power-saver-ime-icon.md) |
 | 2a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
 | 2b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) |
 | 2c | 新增手動按鈕：一鍵進入/退出平板模式 | 待處理 To-do | [issues/to-do/02c-tablet-mode-button.md](issues/to-do/02c-tablet-mode-button.md) |
@@ -54,8 +54,8 @@ issues/on-hold/      暫緩 On Hold
 
 ### 共同背景知識（每個視窗開始前都該先讀）
 
-- **電源模式對應**：GNOME 的省電/平衡/效能三檔，實際是靠 `tuned-ppd`（不是 `power-profiles-daemon`）映射到 tuned profile：`power-saver→powersave`、`balanced→balanced(-battery)`、`performance→throughput-performance`。細節見 [issues/complete/shift-key-drop.md](issues/complete/shift-key-drop.md) 診斷過程。
-- **已知但尚未深入診斷的舊觀察**：之前測試 Shift 掉鍵問題時，曾發現「接電源或不接電源、只要電源模式是省電，重開機到 GNOME 桌面時，輸入法中英切換圖示不會顯示，也點不到、Shift 也切不了」——這是 [issues/to-do/01-power-saver-ime-icon.md](issues/to-do/01-power-saver-ime-icon.md) 的現象，判斷可能跟掉鍵是不同成因。
+- **電源模式對應**：GNOME 的省電/平衡/效能三檔，實際是靠 `tuned-ppd`（不是 `power-profiles-daemon`）映射到 tuned profile：`power-saver→powersave`、`balanced→balanced(-battery)`、`performance→throughput-performance`。細節見 [issues/complete/01a-shift-key-drop.md](issues/complete/01a-shift-key-drop.md) 診斷過程。
+- **已知但尚未深入診斷的舊觀察**：之前測試 Shift 掉鍵問題時，曾發現「接電源或不接電源、只要電源模式是省電，重開機到 GNOME 桌面時，輸入法中英切換圖示不會顯示，也點不到、Shift 也切不了」——這是 [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) 的現象，判斷可能跟掉鍵是不同成因。
 - **側邊音量鍵曾經失效過又自己恢復**：懷疑跟某次系統更新有關，跟 [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) 有關，尚未深究原因，只是現象曾被記錄。
 - **同款硬體參考筆記**：見下方「參考資料」。跟 [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md)（Hinge Sensor）、[issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md)（指紋辨識無驅動）直接相關。
 - **repo 既有慣例**：`issues/to-do/`、`issues/in-progress/`、`issues/complete/`、`issues/blocked/`、`issues/on-hold/` 五個資料夾對應五種狀態，項目本身不分「bug」還是「功能」，狀態改變就把檔案 `git mv` 到對應資料夾；`patches/` 放實際可套用的 patch 檔或完整備份檔；`reference/` 放跨平台/跨機器的參考資料（不是這台機器專屬的問題）。
