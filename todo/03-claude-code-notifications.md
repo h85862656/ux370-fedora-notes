@@ -1,6 +1,6 @@
 # 3. Claude Code 在終端機完成工作、或等待使用者回覆選項時，跳出系統通知
 
-**狀態**：已完成
+**狀態**：已完成 Complete
 **認領視窗**：2026-07-10 / claude-code-notifications
 
 ## 目標

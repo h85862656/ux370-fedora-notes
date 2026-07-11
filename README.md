@@ -13,10 +13,10 @@
 
 已經診斷、修復過的問題。
 
-| 問題 | 狀態 | 筆記 |
+| 問題 Issue | 狀態 Status | 筆記 Note |
 |---|---|---|
-| Shift 單擊切換中英文偶爾失效（掉鍵） | 已本機修復,已回報上游（Codeberg）,等待回覆 | [issues/shift-key-drop.md](issues/shift-key-drop.md) |
-| 電池瓦數顯示錯誤（GNOME 擴充功能） | 已修復,已回報上游 | [issues/battery-wattage-display.md](issues/battery-wattage-display.md) |
+| Shift 單擊切換中英文偶爾失效（掉鍵） | 已完成 Complete | [issues/shift-key-drop.md](issues/shift-key-drop.md)（本機已修復，已回報上游 Codeberg，尚未合併） |
+| 電池瓦數顯示錯誤（GNOME 擴充功能） | 已完成 Complete | [issues/battery-wattage-display.md](issues/battery-wattage-display.md)（已回報上游，等待回覆） |
 
 ### 檔案格式說明
 
@@ -45,34 +45,34 @@
 給多個平行執行的 Claude Code 視窗協作用，每個視窗認領一個項目、獨立處理，完成後回填對應檔案並推送。
 
 1. 開始前先 `git pull`，確認拿到的是最新版本，避免跟其他視窗的認領/更新衝突。
-2. 選一個「狀態」還是 `未開始` 的項目，打開對應的 `todo/*.md`，把狀態改成 `進行中`，並在「認領視窗」欄位填上「日期 / 這次任務內容當標題」（例如 `2026-07-10 / 觸控板捲動速度調整`），**先 commit 這個認領動作再開始做事**，降低跟其他視窗撞題目的機率。
+2. 選一個「狀態」還是 `待處理 To-do` 的項目，打開對應的 `todo/*.md`，把狀態改成 `進行中 In Progress`，並在「認領視窗」欄位填上「日期 / 這次任務內容當標題」（例如 `2026-07-10 / 觸控板捲動速度調整`），**先 commit 這個認領動作再開始做事**，降低跟其他視窗撞題目的機率。
 3. 處理過程中衍生的診斷紀錄、patch、腳本，比照既有的 `issues/`、`patches/` 慣例存檔。
 4. 完成後（或卡住需要討論時），回來更新該項目的 `todo/*.md`：
-   - 狀態改成 `已完成` / `卡住待討論` / `暫緩`
+   - 狀態改成 `已完成 Complete` / `卡住待討論 Blocked` / `暫緩 On Hold`
    - 在「進度與發現」欄位寫清楚做了什麼、發現什麼、還有什麼要注意，並連結新增的檔案
    - 同步更新下面總覽表格裡這個項目的「狀態」欄位
 5. `git add` + `commit`（commit message 標明項目編號）+ `push`。
 6. 如果 push 時發現別的視窗也改了同一個檔案（包括這份 README 的表格）導致衝突，正常解衝突即可，不要整份用自己的版本覆蓋過去。
 7. 新增待補項目時：在 `todo/` 資料夾建立新檔案（比照既有檔案格式：狀態 / 認領視窗 / 目標 / 背景 / 進度與發現），編號接續目前最大的號碼往下加（不要留空號、也不要重複用已經刪除/搬移過的舊編號），並在下面表格新增一列。
 
-**狀態選項**：`未開始` / `進行中` / `已完成` / `卡住待討論` / `暫緩`
+**狀態選項**：`待處理 To-do` / `進行中 In Progress` / `已完成 Complete` / `卡住待討論 Blocked` / `暫緩 On Hold`
 
 ### 項目總覽
 
-| # | 項目 | 狀態 | 詳細內容 |
+| # | 項目 Item | 狀態 Status | 詳細內容 Details |
 |---|---|---|---|
-| 1 | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 未開始 | [todo/01](todo/01-power-saver-ime-icon.md) |
-| 2a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 未開始 | [todo/02a](todo/02a-virtual-keyboard-button.md) |
-| 2b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 未開始 | [todo/02b](todo/02b-hinge-angle-sensor.md) |
-| 2c | 新增手動按鈕：一鍵進入/退出平板模式 | 未開始 | [todo/02c](todo/02c-tablet-mode-button.md) |
-| 2d | 平板模式下自動關觸控板 + 自動旋轉開關按鈕 | 未開始 | [todo/02d](todo/02d-tablet-mode-peripherals.md) |
-| 3 | Claude Code 完成/等待回覆時跳出系統通知 | 已完成 | [todo/03](todo/03-claude-code-notifications.md) |
-| 4 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 未開始 | [todo/04](todo/04-ssd-repartition.md) |
-| 5 | 確認側邊音量鍵是否正常 | 未開始 | [todo/05](todo/05-volume-key-check.md) |
-| 6 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 未開始 | [todo/06](todo/06-fingerprint-reader.md) |
-| 7 | 觸控板雙指捲動速度太快，想調慢 30% | 卡住待討論 | [todo/07](todo/07-touchpad-scroll-speed.md) |
-| 8 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 未開始 | [todo/08](todo/08-chrome-shutdown-grace-period.md) |
-| 9 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 未開始 | [todo/09](todo/09-line-extension-standalone-icon.md) |
+| 1 | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [todo/01](todo/01-power-saver-ime-icon.md) |
+| 2a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [todo/02a](todo/02a-virtual-keyboard-button.md) |
+| 2b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [todo/02b](todo/02b-hinge-angle-sensor.md) |
+| 2c | 新增手動按鈕：一鍵進入/退出平板模式 | 待處理 To-do | [todo/02c](todo/02c-tablet-mode-button.md) |
+| 2d | 平板模式下自動關觸控板 + 自動旋轉開關按鈕 | 待處理 To-do | [todo/02d](todo/02d-tablet-mode-peripherals.md) |
+| 3 | Claude Code 完成/等待回覆時跳出系統通知 | 已完成 Complete | [todo/03](todo/03-claude-code-notifications.md) |
+| 4 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 待處理 To-do | [todo/04](todo/04-ssd-repartition.md) |
+| 5 | 確認側邊音量鍵是否正常 | 待處理 To-do | [todo/05](todo/05-volume-key-check.md) |
+| 6 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 待處理 To-do | [todo/06](todo/06-fingerprint-reader.md) |
+| 7 | 觸控板雙指捲動速度太快，想調慢 30% | 卡住待討論 Blocked | [todo/07](todo/07-touchpad-scroll-speed.md) |
+| 8 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 待處理 To-do | [todo/08](todo/08-chrome-shutdown-grace-period.md) |
+| 9 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 待處理 To-do | [todo/09](todo/09-line-extension-standalone-icon.md) |
 
 ## 參考資料
 
