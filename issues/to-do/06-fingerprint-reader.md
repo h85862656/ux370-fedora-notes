@@ -1,4 +1,4 @@
-# 6. 側邊指紋辨識 Goodix GXFP3200 (SPI) 尚無官方 Linux 驅動
+# 06. 側邊指紋辨識 Goodix GXFP3200 (SPI) 尚無官方 Linux 驅動
 
 **狀態**：待處理 To-do
 **認領視窗**：（尚未認領）

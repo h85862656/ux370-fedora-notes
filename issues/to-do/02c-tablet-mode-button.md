@@ -1,4 +1,4 @@
-# 2c. 新增手動按鈕：一鍵進入/退出平板模式
+# 02c. 新增手動按鈕：一鍵進入/退出平板模式
 
 **狀態**：待處理 To-do
 **認領視窗**：（尚未認領）
@@ -9,7 +9,7 @@
 
 ## 背景
 
-屬於「2. 觸控/翻轉相關功能」系列項目之一，見 [02a](02a-virtual-keyboard-button.md)、[02b](02b-hinge-angle-sensor.md)、[02d](02d-tablet-mode-peripherals.md)。
+屬於「02. 觸控/翻轉相關功能」系列項目之一，見 [02a](02a-virtual-keyboard-button.md)、[02b](02b-hinge-angle-sensor.md)、[02d](02d-tablet-mode-peripherals.md)。
 
 這是 02b 的保底方案——就算感測器自動偵測搞不定，至少讓使用者能手動觸發同樣的平板模式狀態。
 

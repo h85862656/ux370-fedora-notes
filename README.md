@@ -29,17 +29,17 @@ issues/on-hold/      暫緩 On Hold
 | 00 | 電池瓦數顯示錯誤（GNOME 擴充功能） | 已完成 Complete | [issues/complete/00-battery-wattage-display.md](issues/complete/00-battery-wattage-display.md)（已回報上游，等待回覆） |
 | 01a | Shift 單擊切換中英文偶爾失效（掉鍵） | 已完成 Complete | [issues/complete/01a-shift-key-drop.md](issues/complete/01a-shift-key-drop.md)（本機已修復，已回報上游 Codeberg，尚未合併） |
 | 01b | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) |
-| 3 | Claude Code 完成/等待回覆時跳出系統通知 | 已完成 Complete | [issues/complete/03-claude-code-notifications.md](issues/complete/03-claude-code-notifications.md) |
-| 7 | 觸控板雙指捲動速度太快，想調慢 30% | 卡住待討論 Blocked | [issues/blocked/07-touchpad-scroll-speed.md](issues/blocked/07-touchpad-scroll-speed.md) |
-| 2a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
-| 2b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) |
-| 2c | 新增手動按鈕：一鍵進入/退出平板模式 | 待處理 To-do | [issues/to-do/02c-tablet-mode-button.md](issues/to-do/02c-tablet-mode-button.md) |
-| 2d | 平板模式下自動關觸控板 + 自動旋轉開關按鈕 | 待處理 To-do | [issues/to-do/02d-tablet-mode-peripherals.md](issues/to-do/02d-tablet-mode-peripherals.md) |
-| 4 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 待處理 To-do | [issues/to-do/04-ssd-repartition.md](issues/to-do/04-ssd-repartition.md) |
-| 5 | 確認側邊音量鍵是否正常 | 待處理 To-do | [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) |
-| 6 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 待處理 To-do | [issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md) |
-| 8 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 待處理 To-do | [issues/to-do/08-chrome-shutdown-grace-period.md](issues/to-do/08-chrome-shutdown-grace-period.md) |
-| 9 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 待處理 To-do | [issues/to-do/09-line-extension-standalone-icon.md](issues/to-do/09-line-extension-standalone-icon.md) |
+| 03 | Claude Code 完成/等待回覆時跳出系統通知 | 已完成 Complete | [issues/complete/03-claude-code-notifications.md](issues/complete/03-claude-code-notifications.md) |
+| 07 | 觸控板雙指捲動速度太快，想調慢 30% | 卡住待討論 Blocked | [issues/blocked/07-touchpad-scroll-speed.md](issues/blocked/07-touchpad-scroll-speed.md) |
+| 02a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
+| 02b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) |
+| 02c | 新增手動按鈕：一鍵進入/退出平板模式 | 待處理 To-do | [issues/to-do/02c-tablet-mode-button.md](issues/to-do/02c-tablet-mode-button.md) |
+| 02d | 平板模式下自動關觸控板 + 自動旋轉開關按鈕 | 待處理 To-do | [issues/to-do/02d-tablet-mode-peripherals.md](issues/to-do/02d-tablet-mode-peripherals.md) |
+| 04 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 待處理 To-do | [issues/to-do/04-ssd-repartition.md](issues/to-do/04-ssd-repartition.md) |
+| 05 | 確認側邊音量鍵是否正常 | 待處理 To-do | [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) |
+| 06 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 待處理 To-do | [issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md) |
+| 08 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 待處理 To-do | [issues/to-do/08-chrome-shutdown-grace-period.md](issues/to-do/08-chrome-shutdown-grace-period.md) |
+| 09 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 待處理 To-do | [issues/to-do/09-line-extension-standalone-icon.md](issues/to-do/09-line-extension-standalone-icon.md) |
 
 ### 檔案格式說明
 

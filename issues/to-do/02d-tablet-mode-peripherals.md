@@ -1,4 +1,4 @@
-# 2d. 平板模式下的周邊行為：自動關觸控板 + 自動旋轉開關按鈕
+# 02d. 平板模式下的周邊行為：自動關觸控板 + 自動旋轉開關按鈕
 
 **狀態**：待處理 To-do
 **認領視窗**：（尚未認領）
@@ -11,7 +11,7 @@
 
 ## 背景
 
-屬於「2. 觸控/翻轉相關功能」系列項目之一，見 [02a](02a-virtual-keyboard-button.md)、[02b](02b-hinge-angle-sensor.md)、[02c](02c-tablet-mode-button.md)。
+屬於「02. 觸控/翻轉相關功能」系列項目之一，見 [02a](02a-virtual-keyboard-button.md)、[02b](02b-hinge-angle-sensor.md)、[02c](02c-tablet-mode-button.md)。
 
 這項依賴 02b 或 02c 至少一個先完成（要有「現在是不是平板模式」這個狀態可以掛觸發條件），建議排在 02b/02c 之後處理。
 
