@@ -9,7 +9,7 @@
 
 ## 背景
 
-同款硬體參考筆記（見 [README.md](../README.md) 參考資料）明確寫「Fingerprint: Goodix GXFP3200 (SPI) — not supported on Linux」。這項短期內大機率無解，性質比較像「定期追蹤官方/社群進度」，不是能一次做完的任務。
+同款硬體參考筆記（見 [README.md](../../README.md) 參考資料）明確寫「Fingerprint: Goodix GXFP3200 (SPI) — not supported on Linux」。這項短期內大機率無解，性質比較像「定期追蹤官方/社群進度」，不是能一次做完的任務。
 
 ## 進度與發現
 

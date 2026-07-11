@@ -28,7 +28,7 @@
 
 ## 修復方式
 
-把 200ms 門檻改成 500ms（並修正過期的註解）。Patch 檔案：[`patches/ibus-chewing-shift-500ms.patch`](../patches/ibus-chewing-shift-500ms.patch)
+把 200ms 門檻改成 500ms（並修正過期的註解）。Patch 檔案：[`patches/ibus-chewing-shift-500ms.patch`](../../patches/ibus-chewing-shift-500ms.patch)
 
 ```diff
 diff --git a/src/ibus-chewing-preedit.c b/src/ibus-chewing-preedit.c
