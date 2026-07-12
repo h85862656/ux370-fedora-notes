@@ -99,3 +99,13 @@ dnf history list | grep -i chewing
 - **實際追蹤處（Codeberg,主要開發現場）**：https://codeberg.org/chewing/ibus-chewing/issues/302
   - 內容與 GitHub 那則相同（中英雙語 + 診斷過程 + patch diff）,狀態：已送出,等待回覆
 - 附註：chewing/ibus-chewing 主要開發已轉移到 Codeberg,GitHub 上只留唯讀鏡像方便搜尋,之後回報進度以 Codeberg 為準
+
+### 進度追蹤
+
+- 2026-07-10：維護者 kanru 回覆，沒有直接接受 500ms patch，傾向比照 Windows 版做成可調整設定；質疑「整整 200ms 都執行不到」是否合理，要求提供診斷資訊（背景 CPU 負載、kernel HZ）。
+- 2026-07-13：已回覆 kanru：
+  - `CONFIG_HZ=1000`（推翻低 HZ 假設）
+  - 測試當下背景負載輕量（8 個大多靜態分頁 + 1 個播放音樂的分頁，無其他吃重程式）
+  - 提出新假設：CPU C-state（深度閒置）造成 Shift 按下到放開之間的量測時間差被灌水，跟已排除的 PS/2 runtime PM 是不同機制
+  - 待電量較低、容易重現問題時，計畫加 debug log 實測真實時間差，並搭配 `turbostat`/C-state 使用量數據佐證，測完後回覆 kanru
+- **下一步（尚未執行）**：等電量降低、容易重現掉鍵時，進行實測（見上）。build 環境沿用「重建步驟」章節。
