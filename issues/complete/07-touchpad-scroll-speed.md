@@ -1,6 +1,6 @@
 # 07. 觸控板雙指捲動（上下/左右）速度太快，想調慢 30%
 
-**狀態**：進行中 In Progress
+**狀態**：已完成 Complete
 **認領視窗**：2026-07-10 / 觸控板捲動速度調整
 
 ## 目標
@@ -34,4 +34,20 @@ GNOME/libinput 的捲動速度可能可以透過 `gsettings`（`org.gnome.deskto
    - 使用者要的「慢 30%」大約對應把 scroll factor 設成 `0.7`。
    - 唯一需要注意的地方：這是把第三方程式碼掛進 `gnome-shell`（桌面殼層本身）的進程裡執行，雖然設計上聲稱可逆、且不是系統層級的全域 preload，但終究不是官方途徑，等於在核心桌面進程裡跑外部程式碼，出問題時的影響範圍會比一般應用程式的 extension 大。
 
-**目前決定**：使用者看完三個方案、確認風險與滑鼠滾輪不受影響後，決定實際安裝 WSF 並測試。安裝、設定、實測結果會持續補記在下面。
+**安裝與設定過程**：確認風險、以及滑鼠滾輪不受影響後，決定實際安裝 WSF：
+- 用官方 bootstrap script 安裝（`~/wayland-scroll-factor` 原始碼 + 編譯依賴套件，全部裝在使用者家目錄下 `~/.local`，沒有寫入任何系統層級路徑）
+- `wsf enable` 啟用 preload，登出重新登入一次後生效（`gnome-shell library mapped: yes`）
+- 實測時逐步調整數值：一開始設 `0.7`（對應「慢 30%」）感覺不出明顯差異 → 改用 `0.3` 測試「機制到底有沒有作用」確認有效 → 最後實際落點在 **`0.15`**（垂直/水平都設一樣），瀏覽器、檔案總管（Nautilus）在這個數值下速度變慢的感覺跟預期一致
+
+**已知限制：終端機（Ptyxis）捲動速度打折，不是完全沒作用**：在同一個 `0.15` 係數下，Ptyxis 終端機（Fedora 預設終端機，底層用 VTE 元件）雙指捲動**確實有變慢**，但幅度不夠——使用者實測感覺大約還比理想速度快 1.5 倍左右，跟瀏覽器/檔案總管在同一係數下的減速幅度不成比例。查證後確認：
+- 這是 WSF 官方文件（`docs/troubleshooting.md`）記載的已知類別問題——WSF 是在數值送到任何 app **之前**、對「線上原始數值」統一縮放，縮放比例本身是一致的，但**不同工具包（GTK vs Chromium/Electron vs 終端機元件）對同一組數值的內部換算方式不同**，WSF 沒辦法介入 app 內部的二次轉換。文件裡舉的例子是 Chromium/Electron 系（Chrome、VS Code 等）因為固定 5.3 倍轉換常數而特別快；Ptyxis/VTE 很可能也有類似但沒被文件明確記錄的內部換算邏輯
+- 檢查過 Ptyxis 偏好設定（外觀、行為兩個分頁）：**沒有提供任何捲動速度/靈敏度設定**，只有捲動軸顯示、捲動到底部行為、回捲列數等選項，跟速度無關，所以無法從 Ptyxis 自己的設定裡修正
+- WSF 的係數是全域套用在所有 app 上的單一數值，沒有「只調終端機」這種分 app 設定的選項；再往下調雖然能讓終端機更慢，但會讓瀏覽器/檔案總管變得太慢，兩邊無法用同一個數字兼顧
+- 使用者權衡後決定接受這個殘留落差，先照目前 `0.15` 使用、自行適應
+
+**最終設定值**：`scroll_vertical_factor` / `scroll_horizontal_factor` 都是 `0.15`（`pinch_zoom`、`pinch_rotate` 維持預設 `1.0` 沒動），WSF preload 已啟用（`wsf status` → `enabled: yes`）。設定檔位置：`~/.config/wayland-scroll-factor/config`；啟用開關位置：`~/.config/environment.d/wayland-scroll-factor.conf`。
+
+**如果之後要調整或解除安裝**：
+- 改係數：`wsf set 0.15`（或用 `wsf-gui` 圖形介面滑桿）
+- 停用 preload：`wsf disable`，登出登入後生效
+- 完整解除安裝：跑 `~/wayland-scroll-factor/scripts/uninstall.sh`
