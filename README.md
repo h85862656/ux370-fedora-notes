@@ -30,7 +30,7 @@ issues/on-hold/      暫緩 On Hold
 | 01a | Shift 單擊切換中英文偶爾失效（掉鍵） | 已完成 Complete | [issues/complete/01a-shift-key-drop.md](issues/complete/01a-shift-key-drop.md)（本機已修復，已回報上游 Codeberg，尚未合併） |
 | 01b | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) |
 | 03 | Claude Code 完成/等待回覆時跳出系統通知 | 已完成 Complete | [issues/complete/03-claude-code-notifications.md](issues/complete/03-claude-code-notifications.md) |
-| 07 | 觸控板雙指捲動速度太快，想調慢 30% | 卡住待討論 Blocked | [issues/blocked/07-touchpad-scroll-speed.md](issues/blocked/07-touchpad-scroll-speed.md) |
+| 07 | 觸控板雙指捲動速度太快，想調慢 30% | 進行中 In Progress | [issues/in-progress/07-touchpad-scroll-speed.md](issues/in-progress/07-touchpad-scroll-speed.md) |
 | 02a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
 | 02b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) |
 | 02c | 新增手動按鈕：一鍵進入/退出平板模式 | 待處理 To-do | [issues/to-do/02c-tablet-mode-button.md](issues/to-do/02c-tablet-mode-button.md) |
