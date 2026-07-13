@@ -56,7 +56,7 @@ issues/on-hold/      暫緩 On Hold
 
 - **電源模式對應**：GNOME 的省電/平衡/效能三檔，實際是靠 `tuned-ppd`（不是 `power-profiles-daemon`）映射到 tuned profile：`power-saver→powersave`、`balanced→balanced(-battery)`、`performance→throughput-performance`。細節見 [issues/complete/01a-shift-key-drop.md](issues/complete/01a-shift-key-drop.md) 診斷過程。
 - **已知但尚未深入診斷的舊觀察**：之前測試 Shift 掉鍵問題時，曾發現「接電源或不接電源、只要電源模式是省電，重開機到 GNOME 桌面時，輸入法中英切換圖示不會顯示，也點不到、Shift 也切不了」——這是 [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) 的現象，判斷可能跟掉鍵是不同成因。
-- **側邊音量鍵曾經失效過又自己恢復**：懷疑跟某次系統更新有關，跟 [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) 有關，尚未深究原因，只是現象曾被記錄。
+- **側邊音量鍵的時好時壞歷史**：剛裝好 Fedora 時側邊音量鍵一開始是失效的；後來某次開機發現變正常了，當時判斷可能是某次系統更新順便修好的（沒有確認是哪次更新、也沒有深究原因）；再之後又失效了一次（同樣懷疑可能又是某次更新造成，沒有實際證據），而且這次沒有再自己恢復，才因此開了 [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) 這個項目要實際分析解決。
 - **同款硬體參考筆記**：見下方「參考資料」。跟 [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md)（Hinge Sensor）、[issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md)（指紋辨識無驅動）直接相關。
 - **repo 既有慣例**：`issues/to-do/`、`issues/in-progress/`、`issues/complete/`、`issues/blocked/`、`issues/on-hold/` 五個資料夾對應五種狀態，項目本身不分「bug」還是「功能」，狀態改變就把檔案 `git mv` 到對應資料夾；`patches/` 放實際可套用的 patch 檔或完整備份檔；`reference/` 放跨平台/跨機器的參考資料（不是這台機器專屬的問題）。
 - **風險等級**：[issues/to-do/04-ssd-repartition.md](issues/to-do/04-ssd-repartition.md)（磁碟分割調整）具有破壞性，資料遺失風險高，處理前必須先完成備份要求，見該檔案說明。
