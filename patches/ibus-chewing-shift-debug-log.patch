@@ -1,0 +1,66 @@
+diff --git a/src/ibus-chewing-preedit.c b/src/ibus-chewing-preedit.c
+index 33fdf7a..e12e192 100644
+--- a/src/ibus-chewing-preedit.c
++++ b/src/ibus-chewing-preedit.c
+@@ -6,6 +6,25 @@
+ #include "ibus-chewing-preedit-private.h"
+ #include <chewing.h>
+ #include <glib.h>
++#include <stdio.h>
++#include <time.h>
++
++static void shift_debug_log(const char *side, const char *stage, gint64 interval, gboolean dropped) {
++    FILE *f = fopen("/tmp/shift-debug.log", "a");
++    if (!f) return;
++    time_t now = time(NULL);
++    struct tm tmv;
++    localtime_r(&now, &tmv);
++    char ts[32];
++    strftime(ts, sizeof(ts), "%H:%M:%S", &tmv);
++    if (interval >= 0) {
++        fprintf(f, "[%s] %s %s interval=%" G_GINT64_FORMAT " us (%.1f ms) %s\n",
++                ts, side, stage, interval, interval / 1000.0, dropped ? "DROPPED(掉鍵)" : "OK(有切換)");
++    } else {
++        fprintf(f, "[%s] %s %s %s\n", ts, side, stage, dropped ? "DROPPED(掉鍵)" : "OK(有切換)");
++    }
++    fclose(f);
++}
+ 
+ /**************************************
+  * Methods
+@@ -378,12 +397,16 @@ EventResponse self_handle_shift_left(IBusChewingPreEdit *self, KSym kSym,
+      * thus should not be recognized as single Shift key
+      */
+     if (self->keyLast != IBUS_KEY_Shift_L && self->keyLast != IBUS_KEY_Shift_R) {
++        shift_debug_log("left", "keyLast-check", -1, TRUE);
+         return EVENT_RESPONSE_IGNORE;
+     }
+ 
+     /* Ignore the Shift key if hold more than 100 ms */
+     gint64 currTs = g_get_monotonic_time();
+-    if (currTs - self->keyLastTs > 200 * G_TIME_SPAN_MILLISECOND) {
++    gint64 interval = currTs - self->keyLastTs;
++    gboolean dropped = interval > 200 * G_TIME_SPAN_MILLISECOND;
++    shift_debug_log("left", "interval-check", interval, dropped);
++    if (dropped) {
+         return EVENT_RESPONSE_IGNORE;
+     }
+ 
+@@ -412,12 +435,16 @@ EventResponse self_handle_shift_right(IBusChewingPreEdit *self, KSym kSym,
+      * thus should not be recognized as single Shift key
+      */
+     if (self->keyLast != IBUS_KEY_Shift_L && self->keyLast != IBUS_KEY_Shift_R) {
++        shift_debug_log("right", "keyLast-check", -1, TRUE);
+         return EVENT_RESPONSE_IGNORE;
+     }
+ 
+     /* Ignore the Shift key if hold more than 100 ms */
+     gint64 currTs = g_get_monotonic_time();
+-    if (currTs - self->keyLastTs > 200 * G_TIME_SPAN_MILLISECOND) {
++    gint64 interval = currTs - self->keyLastTs;
++    gboolean dropped = interval > 200 * G_TIME_SPAN_MILLISECOND;
++    shift_debug_log("right", "interval-check", interval, dropped);
++    if (dropped) {
+         return EVENT_RESPONSE_IGNORE;
+     }
+ 

@@ -27,7 +27,7 @@ issues/on-hold/      暫緩 On Hold
 | # | 項目 Item | 狀態 Status | 詳細內容 Details |
 |---|---|---|---|
 | 00 | 電池瓦數顯示錯誤（GNOME 擴充功能） | 已完成 Complete | [issues/complete/00-battery-wattage-display.md](issues/complete/00-battery-wattage-display.md)（已回報上游，等待回覆） |
-| 01a | Shift 單擊切換中英文偶爾失效（掉鍵） | 已完成 Complete | [issues/complete/01a-shift-key-drop.md](issues/complete/01a-shift-key-drop.md)（本機已修復，已回報上游 Codeberg，尚未合併） |
+| 01a | Shift 單擊切換中英文偶爾失效（掉鍵） | 已完成 Complete | [issues/complete/01a-shift-key-drop.md](issues/complete/01a-shift-key-drop.md)（本機已修復，已回報上游 Codeberg，尚未合併；⚠️ 目前暫時換回 bug 版本蒐集樣本中，詳見檔案內警示） |
 | 01b | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) |
 | 03 | Claude Code 完成/等待回覆時跳出系統通知 | 已完成 Complete | [issues/complete/03-claude-code-notifications.md](issues/complete/03-claude-code-notifications.md) |
 | 07 | 觸控板雙指捲動速度太快，想調慢 30% | 已完成 Complete | [issues/complete/07-touchpad-scroll-speed.md](issues/complete/07-touchpad-scroll-speed.md)（已安裝 WSF，實際落點 0.15；Ptyxis 終端機減速幅度較小，屬已知限制，使用者接受現況） |
