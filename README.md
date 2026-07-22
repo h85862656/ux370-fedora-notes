@@ -33,7 +33,7 @@ issues/on-hold/      暫緩 On Hold
 | 07 | 觸控板雙指捲動速度太快，想調慢 30% | 已完成 Complete | [issues/complete/07-touchpad-scroll-speed.md](issues/complete/07-touchpad-scroll-speed.md)（已安裝 WSF，實際落點 0.15；Ptyxis 終端機減速幅度較小，屬已知限制，使用者接受現況） |
 | 02a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
 | 02b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) |
-| 02c | 新增手動按鈕：一鍵進入/退出平板模式 | 待處理 To-do | [issues/to-do/02c-tablet-mode-button.md](issues/to-do/02c-tablet-mode-button.md) |
+| 02c | 新增手動按鈕：一鍵進入/退出平板模式 | 進行中 In Progress | [issues/in-progress/02c-tablet-mode-button.md](issues/in-progress/02c-tablet-mode-button.md) |
 | 02d | 平板模式下自動關觸控板 + 自動旋轉開關按鈕 | 待處理 To-do | [issues/to-do/02d-tablet-mode-peripherals.md](issues/to-do/02d-tablet-mode-peripherals.md) |
 | 04 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 待處理 To-do | [issues/to-do/04-ssd-repartition.md](issues/to-do/04-ssd-repartition.md) |
 | 05 | 確認側邊音量鍵是否正常 | 待處理 To-do | [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) |
