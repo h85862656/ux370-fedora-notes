@@ -40,6 +40,7 @@ issues/on-hold/      暫緩 On Hold
 | 06 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 待處理 To-do | [issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md) |
 | 08 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 待處理 To-do | [issues/to-do/08-chrome-shutdown-grace-period.md](issues/to-do/08-chrome-shutdown-grace-period.md) |
 | 09 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 待處理 To-do | [issues/to-do/09-line-extension-standalone-icon.md](issues/to-do/09-line-extension-standalone-icon.md) |
+| 10 | Chrome 打不開，跳「別台電腦鎖定 profile」 | 已完成 Complete | [issues/complete/10-chrome-hostname-lock.md](issues/complete/10-chrome-hostname-lock.md)（根源是 NetworkManager 主機名稱漂移；已回報 Chromium，NetworkManager 待註冊帳號後補留言） |
 
 ### 檔案格式說明
 
@@ -59,6 +60,7 @@ issues/on-hold/      暫緩 On Hold
 - **側邊音量鍵的時好時壞歷史**：剛裝好 Fedora 時側邊音量鍵一開始是失效的；後來某次開機發現變正常了，當時判斷可能是某次系統更新順便修好的（沒有確認是哪次更新、也沒有深究原因）；再之後又失效了一次（同樣懷疑可能又是某次更新造成，沒有實際證據），而且這次沒有再自己恢復，才因此開了 [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) 這個項目要實際分析解決。
 - **同款硬體參考筆記**：見下方「參考資料」。跟 [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md)（Hinge Sensor）、[issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md)（指紋辨識無驅動）直接相關。
 - **repo 既有慣例**：`issues/to-do/`、`issues/in-progress/`、`issues/complete/`、`issues/blocked/`、`issues/on-hold/` 五個資料夾對應五種狀態，項目本身不分「bug」還是「功能」，狀態改變就把檔案 `git mv` 到對應資料夾；`patches/` 放實際可套用的 patch 檔或完整備份檔；`reference/` 放跨平台/跨機器的參考資料（不是這台機器專屬的問題）。
+- **主機名稱已固定**：2026-07-22 設定固定主機名稱為 `thomas-fedora`（pretty: `Thomas-Fedora`），起因跟細節見 [issues/complete/10-chrome-hostname-lock.md](issues/complete/10-chrome-hostname-lock.md)。之前因為沒設固定名稱，NetworkManager 會用反解 IP 動態改名，可能影響任何依賴主機名稱穩定性的程式（不只 Chrome）。
 - **風險等級**：[issues/to-do/04-ssd-repartition.md](issues/to-do/04-ssd-repartition.md)（磁碟分割調整）具有破壞性，資料遺失風險高，處理前必須先完成備份要求，見該檔案說明。
 
 ### 多視窗協作規則
