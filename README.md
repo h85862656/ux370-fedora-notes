@@ -40,7 +40,7 @@ issues/on-hold/      暫緩 On Hold
 | 06 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 待處理 To-do | [issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md) |
 | 08 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 待處理 To-do | [issues/to-do/08-chrome-shutdown-grace-period.md](issues/to-do/08-chrome-shutdown-grace-period.md) |
 | 09 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 待處理 To-do | [issues/to-do/09-line-extension-standalone-icon.md](issues/to-do/09-line-extension-standalone-icon.md) |
-| 10 | Chrome 打不開，跳「別台電腦鎖定 profile」 | 已完成 Complete | [issues/complete/10-chrome-hostname-lock.md](issues/complete/10-chrome-hostname-lock.md)（根源是 NetworkManager 主機名稱漂移；已回報 Chromium，NetworkManager 待註冊帳號後補留言） |
+| 10 | Chrome 點了沒反應，完全打不開（無視窗、無錯誤訊息） | 已完成 Complete | [issues/complete/10-chrome-hostname-lock.md](issues/complete/10-chrome-hostname-lock.md)（根源是 NetworkManager 主機名稱漂移；已回報 Chromium，NetworkManager 待註冊帳號後補留言） |
 
 ### 檔案格式說明
 

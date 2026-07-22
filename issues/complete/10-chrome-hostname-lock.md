@@ -1,12 +1,16 @@
-# 10. Chrome 打不開，跳「別台電腦鎖定 profile」
+# 10. Chrome 點了沒反應，完全打不開（無視窗、無錯誤訊息）
 
 **狀態：已完成 Complete**
 **備註 Note：已在 Chromium 官方 issue 留言（附案例），NetworkManager 那邊等註冊 GitLab 帳號後再補留言**
 
 ## 症狀
 
-點 Chrome 圖示（或從終端機 `google-chrome-stable` 啟動）完全沒有任何視窗跳出來，連錯誤對話框都沒有。
-從終端機執行才看得到 stderr 訊息：
+**使用者實際看到的現象**：點桌面/工作列的 Chrome 圖示，完全沒有反應——沒有視窗跳出來，
+也沒有任何錯誤對話框或提示訊息，就像什麼都沒發生一樣。重開機五次都無法解決（因為觸發原因
+跟開關機無關，見下方根本原因）。
+
+**診斷方式**：因為 GUI 完全沒有線索，改用終端機直接執行 `google-chrome-stable` 指令啟動，
+這樣程式的 stderr 輸出才會直接印在終端機畫面上，才看得到底下這個平常看不到的 log 訊息：
 
 ```
 [ERROR:chrome/browser/process_singleton_posix.cc:365] 另一台電腦
@@ -15,10 +19,9 @@
 [ERROR:chrome/browser/ui/views/message_box_dialog.cc:200] Unable to show message box: ...
 ```
 
-第二行代表連 Chrome 自己想跳的錯誤視窗都彈不出來，所以一般使用者從 GUI 點開時會「完全沒反應」，
-沒有任何文字線索可以搜尋。
-
-重開機五次都無法解決（因為觸發原因跟開關機無關，見下方根本原因）。
+第二行說明了為什麼 GUI 完全沒反應：連 Chrome 自己想跳出來的錯誤視窗本身都彈不出來，
+所以從桌面圖示點開時，使用者端就是「什麼都沒發生」，沒有任何文字線索可以搜尋，
+一定要像這樣從終端機啟動才挖得到根本原因。
 
 ## 根本原因
 
