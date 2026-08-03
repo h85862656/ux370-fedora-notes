@@ -1,0 +1,11 @@
+[Unit]
+Description=Virtual tablet-mode switch control socket
+
+[Socket]
+ListenStream=/run/tablet-mode-switch.sock
+SocketMode=0660
+SocketUser=root
+SocketGroup=h8586
+
+[Install]
+WantedBy=sockets.target

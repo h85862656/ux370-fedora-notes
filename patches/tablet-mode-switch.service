@@ -1,0 +1,7 @@
+[Unit]
+Description=Virtual tablet-mode switch daemon
+Requires=tablet-mode-switch.socket
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/tablet-mode-switchd

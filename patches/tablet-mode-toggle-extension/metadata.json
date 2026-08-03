@@ -1,0 +1,7 @@
+{
+  "uuid": "tablet-mode-toggle@local",
+  "name": "Tablet Mode Toggle",
+  "description": "在系統操作按鈕區新增一顆按鈕，手動進入/退出 GNOME 平板模式（透過 tablet-mode-switch 虛擬開關 daemon）。",
+  "shell-version": ["48", "49", "50"],
+  "version": 1
+}
