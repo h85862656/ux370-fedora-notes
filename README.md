@@ -29,7 +29,6 @@ issues/on-hold/      暫緩 On Hold
 | # | 項目 Item | 狀態 Status | 詳細內容 Details |
 |---|---|---|---|
 | 08 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 進行中 In Progress | [issues/in-progress/08-chrome-shutdown-grace-period.md](issues/in-progress/08-chrome-shutdown-grace-period.md) |
-| 11 | 隱藏系統選單裡的「深色模式」按鈕 | 進行中 In Progress | [issues/in-progress/11-hide-dark-mode-toggle.md](issues/in-progress/11-hide-dark-mode-toggle.md) |
 | 01b | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) |
 | 02a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
 | 02b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) |
@@ -44,6 +43,7 @@ issues/on-hold/      暫緩 On Hold
 | 03 | Claude Code 完成/等待回覆時跳出系統通知 | 已完成 Complete | [issues/complete/03-claude-code-notifications.md](issues/complete/03-claude-code-notifications.md) |
 | 07 | 觸控板雙指捲動速度太快，想調慢 30% | 已完成 Complete | [issues/complete/07-touchpad-scroll-speed.md](issues/complete/07-touchpad-scroll-speed.md)（已安裝 WSF，實際落點 0.15；Ptyxis 終端機減速幅度較小，屬已知限制，使用者接受現況） |
 | 10 | Chrome 點了沒反應，完全打不開（無視窗、無錯誤訊息） | 已完成 Complete | [issues/complete/10-chrome-hostname-lock.md](issues/complete/10-chrome-hostname-lock.md)（根源是 NetworkManager 主機名稱漂移；已回報 Chromium，NetworkManager 待註冊帳號後補留言） |
+| 11 | 隱藏系統選單裡的「深色模式」按鈕 | 已完成 Complete | [issues/complete/11-hide-dark-mode-toggle.md](issues/complete/11-hide-dark-mode-toggle.md) |
 
 ### 檔案格式說明
 
