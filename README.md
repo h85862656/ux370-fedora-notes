@@ -63,6 +63,11 @@ issues/on-hold/      暫緩 On Hold
 - **側邊音量鍵的時好時壞歷史**：剛裝好 Fedora 時側邊音量鍵一開始是失效的；後來某次開機發現變正常了，當時判斷可能是某次系統更新順便修好的（沒有確認是哪次更新、也沒有深究原因）；再之後又失效了一次（同樣懷疑可能又是某次更新造成，沒有實際證據），而且這次沒有再自己恢復，才因此開了 [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) 這個項目要實際分析解決。
 - **同款硬體參考筆記**：見下方「參考資料」。跟 [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md)（Hinge Sensor）、[issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md)（指紋辨識無驅動）直接相關。
 - **平板模式的觸發機制**：GNOME 判斷「現在是不是平板模式」的依據是 kernel 的 `SW_TABLET_MODE` 開關訊號（不是 logind 的 `TabletMode` 屬性——這台沒有；也不是硬體的 Tablet Mode Switch 裝置——這台也沒有，`/proc/bus/input/devices` 只有 Lid Switch）。只要有任何輸入裝置回報這個訊號，mutter 就會進入平板模式（停用內建鍵盤/觸控板、啟用自動旋轉與螢幕鍵盤）。[issues/complete/02c-tablet-mode-button.md](issues/complete/02c-tablet-mode-button.md) 已經用 `python3-evdev` 建立虛擬裝置實作出可用的開關 daemon，控制介面是通用的 `SET 0`/`SET 1`/`TOGGLE`/`STATUS`，[issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) 做出來後可以直接當成另一個觸發來源接上去，不需要重做這一層。
+- **每個項目都要交代資源佔用（CPU / RAM / 續航）**：這是筆電，使用者明確在意背景程式吃 CPU、吃 RAM、吃電池。**任何項目在「進度與發現」裡都要說明你的做法對這三項的影響，不能只寫「功能會動」**；如果做法會增加負擔，要講清楚增加多少、為什麼值得。已經累積出來的判斷準則：
+  - 真正耗電的是**週期性喚醒 CPU**（計時器、輪詢），不是「行程存在」本身。阻塞在 `accept()` / `poll()` 等待的行程不會被排到 CPU 上執行，使用率是 0 而不是「很低」。
+  - 需要有東西常駐持有資源時，優先考慮 **systemd socket activation**：平常完全不啟動、零佔用，有人用到才喚醒，閒置自動結束。做法見 [issues/complete/02c-tablet-mode-button.md](issues/complete/02c-tablet-mode-button.md)。
+  - 避免「每隔一段時間去問一次狀態」的輪詢設計，改成「有變化時才主動通知」的事件式設計。02c 就為此**刻意放棄**了一個會讓每次打開系統選單都喚醒 daemon 的同步做法，見該檔案「已知限制與後續」。
+  - GNOME Shell 擴充套件：只在 `enable()` 執行一次就結束的（例如 [issues/complete/11-hide-dark-mode-toggle.md](issues/complete/11-hide-dark-mode-toggle.md)）成本趨近零；有計時器或長期訊號監聽的要說明為什麼非要不可。
 - **repo 既有慣例**：`issues/to-do/`、`issues/in-progress/`、`issues/complete/`、`issues/blocked/`、`issues/on-hold/` 五種狀態各對應一個資料夾（沒有項目的狀態，資料夾就不會存在，見上方說明），項目本身不分「bug」還是「功能」，狀態改變就把檔案 `git mv` 到對應資料夾；`patches/` 放實際可套用的 patch 檔或完整備份檔；`reference/` 放跨平台/跨機器的參考資料（不是這台機器專屬的問題）。
 - **主機名稱已固定**：2026-07-22 設定固定主機名稱為 `thomas-fedora`（pretty: `Thomas-Fedora`），起因跟細節見 [issues/complete/10-chrome-hostname-lock.md](issues/complete/10-chrome-hostname-lock.md)。之前因為沒設固定名稱，NetworkManager 會用反解 IP 動態改名，可能影響任何依賴主機名稱穩定性的程式（不只 Chrome）。
 - **風險等級**：[issues/to-do/04-ssd-repartition.md](issues/to-do/04-ssd-repartition.md)（磁碟分割調整）具有破壞性，資料遺失風險高，處理前必須先完成備份要求，見該檔案說明。
@@ -78,6 +83,7 @@ issues/on-hold/      暫緩 On Hold
    - 把檔案 `git mv` 到對應的新狀態資料夾（`issues/complete/`、`issues/blocked/`、`issues/on-hold/`）
    - 檔案內「狀態」欄位同步改成 `已完成 Complete` / `卡住待討論 Blocked` / `暫緩 On Hold`
    - 在「進度與發現」欄位寫清楚做了什麼、發現什麼、還有什麼要注意，並連結新增的檔案
+   - **一定要交代這個做法對 CPU / RAM / 續航的影響**（判斷準則見上方「共同背景知識」）
    - 同步更新 README 上面總表裡這個項目的「狀態」欄位跟連結路徑
 5. `git add` + `commit`（commit message 標明項目編號）+ `push`。
 6. 如果 push 時發現別的視窗也改了同一個檔案（包括這份 README 的表格）導致衝突，正常解衝突即可，不要整份用自己的版本覆蓋過去。
