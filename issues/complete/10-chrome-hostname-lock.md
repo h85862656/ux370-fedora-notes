@@ -1,7 +1,8 @@
 # 10. Chrome 點了沒反應，完全打不開（無視窗、無錯誤訊息）
 
-**狀態：已完成 Complete**
-**備註 Note：已在 Chromium 官方 issue 留言（附案例），NetworkManager 那邊等註冊 GitLab 帳號後再補留言**
+**狀態**：已完成 Complete
+**認領視窗**：（早期檔案，未記錄；檔案建立於 2026-07-23）
+**備註 Note**：已在 Chromium 官方 issue 留言（附案例），NetworkManager 那邊等註冊 GitLab 帳號後再補留言
 
 ## 症狀
 

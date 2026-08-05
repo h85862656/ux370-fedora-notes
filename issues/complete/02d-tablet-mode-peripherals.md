@@ -6,13 +6,14 @@
 
 ## 目標
 
-- 進入平板模式時，自動停用觸控板（不管是靠 [02b](02b-hinge-angle-sensor.md) 自動偵測進入、還是靠 [02c](02c-tablet-mode-button.md) 手動按鈕進入，都要生效）
+- 進入平板模式時，自動停用觸控板（不管是靠 [02b](../to-do/02b-hinge-angle-sensor.md) 自動偵測進入、還是靠 [02c](02c-tablet-mode-button.md) 手動按鈕進入，都要生效）
 - 系統操作按鈕區要新增一顆「是否自動旋轉螢幕」的開關按鈕，方便平板模式下切換
 - 鍵盤不用特別處理——已觀察到 ASUS 韌體/硬體本身在翻轉到一定角度後會自動斷電關閉實體鍵盤，不需要另外寫邏輯
+  - ⚠️ **這條的理由後來證實是錯的**（結論「不用特別處理」仍然成立）：實際停用鍵盤的是 mutter 的軟體邏輯，不是韌體斷電。詳見下方「進度與發現 → 目標三」。
 
 ## 背景
 
-屬於「02. 觸控/翻轉相關功能」系列項目之一，見 [02a](02a-virtual-keyboard-button.md)、[02b](02b-hinge-angle-sensor.md)、[02c](02c-tablet-mode-button.md)。
+屬於「02. 觸控/翻轉相關功能」系列項目之一，見 [02a](../to-do/02a-virtual-keyboard-button.md)、[02b](../to-do/02b-hinge-angle-sensor.md)、[02c](02c-tablet-mode-button.md)。
 
 這項依賴 02b 或 02c 至少一個先完成（要有「現在是不是平板模式」這個狀態可以掛觸發條件），建議排在 02b/02c 之後處理。
 
