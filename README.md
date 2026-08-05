@@ -34,7 +34,7 @@ issues/on-hold/      暫緩 On Hold
 | 02a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
 | 02b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) |
 | 02c | 新增手動按鈕：一鍵進入/退出平板模式 | 已完成 Complete | [issues/complete/02c-tablet-mode-button.md](issues/complete/02c-tablet-mode-button.md) |
-| 02d | 平板模式下自動關觸控板 + 自動旋轉開關按鈕 | 進行中 In Progress | [issues/in-progress/02d-tablet-mode-peripherals.md](issues/in-progress/02d-tablet-mode-peripherals.md) |
+| 02d | 平板模式下自動關觸控板 + 自動旋轉開關按鈕 | 已完成 Complete | [issues/complete/02d-tablet-mode-peripherals.md](issues/complete/02d-tablet-mode-peripherals.md)（三個目標都由 02c + GNOME 內建自動滿足，無需開發） |
 | 04 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 待處理 To-do | [issues/to-do/04-ssd-repartition.md](issues/to-do/04-ssd-repartition.md) |
 | 05 | 確認側邊音量鍵是否正常 | 待處理 To-do | [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) |
 | 06 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 待處理 To-do | [issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md) |
