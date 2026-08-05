@@ -57,6 +57,16 @@ gresource extract /usr/lib64/gnome-shell/libshell-18.so /org/gnome/shell/misc/sy
 
 結論同樣是「不需要另外寫邏輯」，但要知道真正的原因，否則之後做 02b 時可能誤判成「一定要翻到某個角度才會生效」。
 
+### 資源佔用（CPU / RAM / 續航）
+
+（2026-08-05 依 README 新規則補寫）
+
+**完全沒有影響：CPU 0、RAM 0、續航 0。** 本項目沒有安裝任何東西、沒有寫任何程式、沒有改任何設定，三個目標全部是 GNOME/mutter 原生行為，在 [02c](02c-tablet-mode-button.md) 把 `SW_TABLET_MODE` 訊號做出來之後就自動生效。
+
+這些原生行為本身也不耗電：停用觸控板/鍵盤是 mutter 收到開關訊號時做一次判斷，不是持續輪詢；自動旋轉按鈕只在平板模式下才出現，也不需要計時器。
+
+**未驗證的部分**：`iio-sensor-proxy` 服務本身是開機就啟動、常駐在跑的（跟本項目無關，Fedora 預設如此）。合理推測 mutter 只在平板模式下才向它要求讀取加速度計、回到筆電模式就釋放，這樣筆電模式下感測器不會持續耗電——但**這只是推測，沒有驗證**。`journalctl -u iio-sensor-proxy` 沒有記錄 claim/release 事件，要確認得另外想辦法（例如觀察 `/sys/bus/iio/devices/` 底下的取樣頻率或 powered 狀態在兩種模式下的差異）。如果之後 [02b](../to-do/02b-hinge-angle-sensor.md) 要處理感測器耗電問題，這是個可以順便釐清的點。
+
 ### 驗收紀錄（2026-08-05）
 
 一般筆電模式：沒有自動旋轉按鈕、螢幕不會自動轉。

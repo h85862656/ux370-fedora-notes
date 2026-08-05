@@ -59,6 +59,8 @@ issues/on-hold/      暫緩 On Hold
 
 最後那項是固定要求：只要這個項目實際動了系統（裝東西、改設定、加背景服務、加擴充套件），檔案裡就要有一段列出**施做後**對 CPU、RAM、續航這三項各自的影響，不能只寫「功能會動」。如果做法完全沒有增加負擔，也要寫清楚為什麼沒有（例如「執行一次就結束，沒有計時器也沒有背景行程」），不能省略不寫。判斷準則見下方「共同背景知識」。
 
+⚠️ **這條規則是 2026-08-05 才新增的，暫時不追溯既往**：在那之前完成的項目檔案沒有這一段是正常的，不算缺漏，也不需要專程回頭補。如果之後有視窗因為別的原因重新動到那些舊檔案，可以順手補上，但不強制。（已補的：[02c](issues/complete/02c-tablet-mode-button.md)、[02d](issues/complete/02d-tablet-mode-peripherals.md)、[11](issues/complete/11-hide-dark-mode-toggle.md)。）
+
 ### 共同背景知識（每個視窗開始前都該先讀）
 
 - **電源模式對應**：GNOME 的省電/平衡/效能三檔，實際是靠 `tuned-ppd`（不是 `power-profiles-daemon`）映射到 tuned profile：`power-saver→powersave`、`balanced→balanced(-battery)`、`performance→throughput-performance`。對應表本身就是系統上的 `/etc/tuned/ppd.conf`，直接看那個檔案即可（2026-08-05 重新確認：`tuned-ppd` active、`power-profiles-daemon` inactive，且電池供電時 `balanced` 會再細分成 `balanced-battery`）。注意 [issues/complete/01a-shift-key-drop.md](issues/complete/01a-shift-key-drop.md) 只用到「省電模式會讓 CPU 效能狀態變低」這個結論，並沒有記錄這張對應表。
@@ -66,7 +68,7 @@ issues/on-hold/      暫緩 On Hold
 - **側邊音量鍵的時好時壞歷史**：剛裝好 Fedora 時側邊音量鍵一開始是失效的；後來某次開機發現變正常了，當時判斷可能是某次系統更新順便修好的（沒有確認是哪次更新、也沒有深究原因）；再之後又失效了一次（同樣懷疑可能又是某次更新造成，沒有實際證據），而且這次沒有再自己恢復，才因此開了 [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) 這個項目要實際分析解決。
 - **同款硬體參考筆記**：見下方「參考資料」。跟 [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md)（Hinge Sensor）、[issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md)（指紋辨識無驅動）直接相關。
 - **平板模式的觸發機制**：GNOME 判斷「現在是不是平板模式」的依據是 kernel 的 `SW_TABLET_MODE` 開關訊號（不是 logind 的 `TabletMode` 屬性——這台沒有；也不是硬體的 Tablet Mode Switch 裝置——這台也沒有，`/proc/bus/input/devices` 只有 Lid Switch）。只要有任何輸入裝置回報這個訊號，mutter 就會進入平板模式（停用內建鍵盤/觸控板、啟用自動旋轉與螢幕鍵盤）。[issues/complete/02c-tablet-mode-button.md](issues/complete/02c-tablet-mode-button.md) 已經用 `python3-evdev` 建立虛擬裝置實作出可用的開關 daemon，控制介面是通用的 `SET 0`/`SET 1`/`TOGGLE`/`STATUS`，[issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) 做出來後可以直接當成另一個觸發來源接上去，不需要重做這一層。
-- **每個項目都要交代資源佔用（CPU / RAM / 續航）**：這是筆電，使用者明確在意背景程式吃 CPU、吃 RAM、吃電池。**任何項目在「進度與發現」裡都要說明你的做法對這三項的影響，不能只寫「功能會動」**；如果做法會增加負擔，要講清楚增加多少、為什麼值得。已經累積出來的判斷準則：
+- **每個項目都要交代資源佔用（CPU / RAM / 續航）**：這是筆電，使用者明確在意背景程式吃 CPU、吃 RAM、吃電池。**任何項目在「進度與發現」裡都要說明你的做法對這三項的影響，不能只寫「功能會動」**；如果做法會增加負擔，要講清楚增加多少、為什麼值得（2026-08-05 新增的規則，不追溯既往，說明見上方「檔案格式說明」）。已經累積出來的判斷準則：
   - 真正耗電的是**週期性喚醒 CPU**（計時器、輪詢），不是「行程存在」本身。阻塞在 `accept()` / `poll()` 等待的行程不會被排到 CPU 上執行，使用率是 0 而不是「很低」。
   - 需要有東西常駐持有資源時，優先考慮 **systemd socket activation**：平常完全不啟動、零佔用，有人用到才喚醒，閒置自動結束。做法見 [issues/complete/02c-tablet-mode-button.md](issues/complete/02c-tablet-mode-button.md)。
   - 避免「每隔一段時間去問一次狀態」的輪詢設計，改成「有變化時才主動通知」的事件式設計。02c 就為此**刻意放棄**了一個會讓每次打開系統選單都喚醒 daemon 的同步做法，見該檔案「已知限制與後續」。
