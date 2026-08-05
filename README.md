@@ -7,7 +7,7 @@
 
 - 機型：ASUS ZenBook UX370UAR
 - 系統：Fedora 44
-- 桌面環境：GNOME Shell 50.2
+- 桌面環境：GNOME Shell 50.3（2026-08-05 確認）
 
 ## 項目清單 Issues
 
@@ -29,6 +29,7 @@ issues/on-hold/      暫緩 On Hold
 | # | 項目 Item | 狀態 Status | 詳細內容 Details |
 |---|---|---|---|
 | 08 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 進行中 In Progress | [issues/in-progress/08-chrome-shutdown-grace-period.md](issues/in-progress/08-chrome-shutdown-grace-period.md) |
+| 11 | 隱藏系統選單裡的「深色模式」按鈕 | 進行中 In Progress | [issues/in-progress/11-hide-dark-mode-toggle.md](issues/in-progress/11-hide-dark-mode-toggle.md) |
 | 01b | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) |
 | 02a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
 | 02b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) |
