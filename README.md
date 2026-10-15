@@ -28,11 +28,11 @@ issues/on-hold/      暫緩 On Hold
 
 | # | 項目 Item | 狀態 Status | 詳細內容 Details |
 |---|---|---|---|
+| 04 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 進行中 In Progress | [issues/in-progress/04-ssd-repartition.md](issues/in-progress/04-ssd-repartition.md)（已完成現況調查與方案選定，等待備份後才能動工） |
 | 08 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 進行中 In Progress | [issues/in-progress/08-chrome-shutdown-grace-period.md](issues/in-progress/08-chrome-shutdown-grace-period.md) |
 | 01b | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) |
 | 02a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
 | 02b | 研究 Fedora 能否讀到翻轉鉸鏈角度感測器訊號 | 待處理 To-do | [issues/to-do/02b-hinge-angle-sensor.md](issues/to-do/02b-hinge-angle-sensor.md) |
-| 04 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 待處理 To-do | [issues/to-do/04-ssd-repartition.md](issues/to-do/04-ssd-repartition.md) |
 | 05 | 確認側邊音量鍵是否正常 | 待處理 To-do | [issues/to-do/05-volume-key-check.md](issues/to-do/05-volume-key-check.md) |
 | 06 | 側邊指紋辨識 Goodix GXFP3200 (SPI) 無官方驅動 | 待處理 To-do | [issues/to-do/06-fingerprint-reader.md](issues/to-do/06-fingerprint-reader.md) |
 | 09 | LINE 擴充套件像 PWA 一樣獨立顯示在工作列 | 待處理 To-do | [issues/to-do/09-line-extension-standalone-icon.md](issues/to-do/09-line-extension-standalone-icon.md) |
