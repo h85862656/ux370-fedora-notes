@@ -1,0 +1,10 @@
+NAME          SIZE FSTYPE LABEL    PARTLABEL            UUID                                 PARTUUID                             MOUNTPOINT
+nvme0n1     931.5G                                                                                                                
+├─nvme0n1p1   128M                                                                           fa77fc65-858f-48e9-af4f-edd1056e1781 
+├─nvme0n1p2   260M vfat   SYSTEM   EFI System Partition 7BAA-6405                            4c7a9c01-fe60-4ce0-9fbf-a35fbc7a9457 /boot/efi
+├─nvme0n1p3 298.8G ntfs   OS                            0AA4E98FA4E97E17                     7d934691-8efa-4a00-8a4b-57e90ddc8067 
+├─nvme0n1p4   1.3G ntfs                                 72DE5E08DE5DC4CF                     46d5f685-3375-46ea-8087-8ef4f2aa1638 
+├─nvme0n1p5 600.2G ntfs            Basic data partition 305C8218479051AA                     b326098a-89b9-4e62-bf67-63a5c6d397da 
+├─nvme0n1p6 822.8M ntfs   RECOVERY Basic data partition A2A341FC53529340                     9317787f-b804-4592-9dce-2ba78429c593 
+├─nvme0n1p7     2G ext4                                 ec07cacc-1ba9-47cd-8bfe-a90aab13e40e 5acfad27-d83d-4b3c-9cd1-263f8d264d00 /boot
+└─nvme0n1p8    28G btrfs  fedora                        9d957795-c4d4-4dd2-8925-83696a384f48 93af4a83-c2db-45ab-abeb-de5aa5f13bb1 /home
