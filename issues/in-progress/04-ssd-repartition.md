@@ -179,7 +179,9 @@ v4 共 18 頁、6 個階段：Windows 準備（`reagentc /disable`）→ 開機�
 
 **手冊 v4 的一處錯誤**：步驟 8 寫「建好後 Fedora 不會馬上使用，之後設定休眠時才會用到」，實際上開機後就自動啟用了（原因見 04f）。手冊**刻意不改**，維持「當時實際照著做的版本」，更正記錄在這裡。
 
-**還沒完成**：Windows 端的確認（手冊第六階段：開機、看磁碟管理、`reagentc /enable`）。
+**Windows 端也驗證通過（2026-10-23）**：從 GRUB 選單正常進入 Windows，磁碟管理所有分割區都是「良好」，`reagentc /enable` 成功、修復環境回到 p4。詳見 04e。
+
+**分割調整（04b～04e）全部完成。** 04 剩下 04f（休眠設定）與 04g（討論是否加裝其他系統）。
 
 ## 04a. 施工前備份提醒
 
@@ -377,7 +379,7 @@ Windows 為了效能，把 NTFS 的中介資料大量快取在記憶體裡、不
 
 **p6 查證（2026-10-22，唯讀掛載）**：裡面只有 `Recovery/WindowsRE/Winre.wim`（2019-09-05，484 MB，Windows 10 時代）與其設定檔、`AsTool.State`、`LOST.DIR` 和 `.Trash`（曾被 Android 手機與 Linux 桌面當一般磁碟寫入）、`$RECYCLE.BIN`（有兩組不同 Windows 安裝的使用者編號）、`System Volume Information`（有 BitLocker 相關資料夾，曾加密、現已解密）。結論：以前 Windows 改版時留下、早就沒在用的舊修復分割區。內容 Acronis 整碟備份都有。
 
-**Windows 實際使用的修復環境是 p4**：C 槽的 `Windows\System32\Recovery\ReAgent.xml` 記錄 `WinreLocation offset="321233354752"`（以 GPT 磁碟 GUID `87c37755-…` 定位），換算成磁區是 627408896，正好是 p4 的起點。這也代表 Windows 是用「位置」記住 p4，p4 搬動後必須 `reagentc /disable` → 調整 → `reagentc /enable`。現在的 Windows 版本是 Win11 24H2（26100）。
+**Windows 實際使用的修復環境是 p4**：C 槽的 `Windows\System32\Recovery\ReAgent.xml` 記錄 `WinreLocation offset="321233354752"`（以 GPT 磁碟 GUID `87c37755-…` 定位），換算成磁區是 627408896，正好是 p4 的起點。這也代表 Windows 是用「位置」記住 p4，p4 搬動後必須 `reagentc /disable` → 調整 → `reagentc /enable`。Windows 版本：原本依 ReAgent.xml 寫成「Win11 24H2（26100）」，**2026-10-23 更正為 10.0.26200（Win11 25H2）**，以命令提示字元顯示的版本為準；26100 是修復環境的版本，不是作業系統的版本。
 
 **4K 對齊（2026-10-23 查證）**：硬碟的邏輯與實體扇區都是 512 bytes。p2～p8 的起點全部 1 MiB 對齊（等於也 4K 對齊），只有 p1 沒有對齊但不影響。動工後的所有新起點都是整數 MiB；手冊註明 GParted 的「Align to」必須維持 MiB。
 
@@ -385,7 +387,7 @@ Windows 為了效能，把 NTFS 的中介資料大量快取在記憶體裡、不
 
 ## 04e. 確認雙系統開機是否正常，異常要修復到能開機為止
 
-**進度與發現**：**Fedora 端已驗證通過（2026-10-23）**，見「施工方案 → 動工完成」。Windows 端待確認。
+**進度與發現**：**完成（2026-10-23）**：Fedora、Windows 兩邊都正常開機，開機設定不需要任何修正。
 
 **動工前查證：開機鏈不需要修正（2026-10-23）**：
 
@@ -406,7 +408,31 @@ Windows 為了效能，把 NTFS 的中介資料大量快取在記憶體裡、不
 
 **Fedora 端實際驗證（2026-10-23）**：開機正常進入 Fedora，GRUB 選單照常出現，跟上表的預期一致，不需要修正任何開機設定。
 
-**Windows 端待確認**：依手冊第六階段，從 GRUB 選單進 Windows（第一次可能先跑磁碟檢查，因為 GParted 調整 NTFS 大小後會標記「下次開機要檢查」）→ 看磁碟管理（C 槽約 300.1 GB、修復磁碟分割約 2.0 GB、Data 約 416.67 GB）→ `reagentc /enable` → `reagentc /info` 確認。從 Fedora 端查得到的證據都支持可以進去：GRUB 用 UUID `7BAA-6405` 找 EFI 分割區（找得到）；Windows 開機程式用位置找 p3，p3 起點仍是 389 MiB。
+**Windows 端實際驗證（2026-10-23）**：從 GRUB 選單的「Windows Boot Manager (on /dev/nvme0n1p2)」正常進入 Windows。截圖存在 460 GB 外接硬碟的「九、第六階段：回到 Windows 確認」資料夾。
+
+磁碟管理（所有分割區狀態都是「良好」，沒有未配置空間）：
+
+| 分割區 | 手冊預期 | 實際 |
+| --- | --- | --- |
+| C 槽 | 約 300.1 GB | 300.10 GB，NTFS，可用 164.80 GB |
+| 修復磁碟分割 | 約 2.0 GB | 2.00 GB |
+| Data | 約 416.67 GB，有磁碟代號 | 416.67 GB，NTFS，**D:** |
+| swap | Windows 不顯示名稱 | 24.00 GB |
+| `/boot` | | 2.00 GB |
+| Fedora | | 186.36 GB |
+| 舊 RECOVERY | 應該不見 | 已經沒有了 |
+
+修復環境（系統管理員命令提示字元）：
+
+```
+reagentc /info    → Windows RE 狀態：Disabled（第一階段關閉後的狀態）
+reagentc /enable  → REAGENTC.EXE: 操作成功。
+reagentc /info    → Windows RE 狀態：Enabled
+                    Windows RE 位置：\\?\GLOBALROOT\device\harddisk0\partition4\Recovery\WindowsRE
+                    Windows RE 版本：10.0.26100.9711
+```
+
+修復環境放回 **partition4**，也就是加大後的 2 GB 修復分割區，跟手冊預期一致。Windows 本身的版本是 10.0.26200.9711。
 
 ## 04f. 開啟 Fedora 的休眠（hibernate）功能
 

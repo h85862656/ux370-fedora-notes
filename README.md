@@ -28,7 +28,7 @@ issues/on-hold/      暫緩 On Hold
 
 | # | 項目 Item | 狀態 Status | 詳細內容 Details |
 |---|---|---|---|
-| 04 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 進行中 In Progress | [issues/in-progress/04-ssd-repartition.md](issues/in-progress/04-ssd-repartition.md)（分割調整已完成，Fedora 端驗證通過；待 Windows 端確認） |
+| 04 | 1TB SSD 磁碟空間調整（雙系統，⚠️ 破壞性） | 進行中 In Progress | [issues/in-progress/04-ssd-repartition.md](issues/in-progress/04-ssd-repartition.md)（分割調整完成，雙系統開機都驗證通過；剩 04f 休眠設定、04g 討論） |
 | 08 | Chrome 關機沒等到正常結束，顯示「意外結束」 | 進行中 In Progress | [issues/in-progress/08-chrome-shutdown-grace-period.md](issues/in-progress/08-chrome-shutdown-grace-period.md) |
 | 01b | 省電模式下開機，輸入法圖示消失、無法切換中英文 | 待處理 To-do | [issues/to-do/01b-power-saver-ime-icon.md](issues/to-do/01b-power-saver-ime-icon.md) |
 | 02a | 觸控輸入無法自動彈出虛擬鍵盤 → 手動按鈕呼叫/關閉 | 待處理 To-do | [issues/to-do/02a-virtual-keyboard-button.md](issues/to-do/02a-virtual-keyboard-button.md) |
