@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-TW"><head><meta charset="utf-8">
+<title>GParted 分割調整操作手冊</title>
+<style>
+body { font-family: "Noto Sans CJK TC", sans-serif; font-size: 10.5pt; line-height: 1.5; }
+h1, h2, h3, h4 { font-family: "Noto Sans CJK TC", sans-serif; }
+h1 { font-size: 18pt; margin-bottom: 2pt; }
+h2 { page-break-before: always; font-size: 14pt; margin-top: 18pt; border-bottom: 1px solid #888; }
+h3 { font-size: 12pt; margin-top: 12pt; }
+h4 { font-size: 11pt; margin-top: 8pt; }
+code, pre { font-family: "Noto Sans Mono CJK TC", monospace; font-size: 9.5pt; }
+pre { background: #f2f2f2; padding: 4pt; }
+.warn { color: #b00000; font-weight: bold; }
+.meta { color: #555; font-size: 9.5pt; }
+td, th { padding: 3pt 5pt; vertical-align: top; font-size: 9.5pt; }
+th { background: #e8e8e8; }
+</style></head><body>
+
+<h1>GParted 分割調整操作手冊</h1>
+<p class="meta">UX370 項目 04（SSD 分割調整）｜2026-10-22 製作（第 4 版：刪除舊 RECOVERY、加大修復環境、新增 swap；補強出錯處理；補充 4K 對齊與數字誤差說明）｜硬碟：KINGSTON SA2000M81000G（931.51 GiB）</p>
+
+<table border="1" cellspacing="0" cellpadding="6" width="100%" style="border-color:#b00000"><tr><td>
+<p><b>開始前一定要讀的三件事</b></p>
+<ol>
+<li><b>進入 GParted 之後，這台筆電沒辦法看這份 PDF。</b>請用手機或另一台電腦開著這份手冊，邊看邊做。</li>
+<li><b>每一步只做一件事，做完就按「套用」，確認畫面跟手冊寫的一樣再做下一步。</b>不要一次排好全部步驟才套用。</li>
+<li><span class="warn">任何一步出現錯誤訊息、或畫面跟手冊不一樣，立刻停手，用手機拍照。不要自己嘗試修。</span><br><b>步驟 1～4 出錯：</b>關機回 Fedora 找 Claude（這時 Fedora 還沒被動到）。<br><b>步驟 5～8 出錯：</b><span class="warn">不要關機，讓 GParted 畫面停在那裡</span>，用手機或另一台電腦找 Claude，把照片和這份手冊一起給它看（這時 Fedora 可能已經開不了機）。</li>
+</ol>
+</td></tr></table>
+
+<h2 style="page-break-before: auto">一、這次要做什麼</h2>
+
+<p>刪掉 600 GB 的舊資料槽和早已沒在用的舊 RECOVERY 分割區，把空間分給 Windows、Windows 修復環境和 Fedora，再新建一個資料槽和一個休眠用的 swap 分割區。</p>
+
+<h3>調整前後對照（GParted 畫面上會看到的數字）</h3>
+<table border="1" cellspacing="0" width="100%">
+<tr><th>裝置名稱</th><th>內容</th><th>調整前</th><th>調整後</th><th>這次要做的事</th></tr>
+<tr><td>nvme0n1p1</td><td>微軟保留區</td><td>128.00 MiB</td><td>128.00 MiB</td><td>不動</td></tr>
+<tr><td>nvme0n1p2</td><td>EFI（標籤 SYSTEM）</td><td>260.00 MiB</td><td>260.00 MiB</td><td>不動</td></tr>
+<tr><td>nvme0n1p3</td><td>Windows（標籤 OS）</td><td>298.79 GiB</td><td><b>300.10 GiB</b></td><td>往後長大</td></tr>
+<tr><td>nvme0n1p4</td><td>Windows 修復環境</td><td>1.31 GiB</td><td><b>2.00 GiB</b></td><td>往後移並加大</td></tr>
+<tr><td>nvme0n1p5</td><td>資料槽</td><td>600.20 GiB</td><td><b>416.67 GiB</b></td><td>刪除後重建</td></tr>
+<tr><td>nvme0n1p6</td><td>舊 RECOVERY → <b>swap</b></td><td>822.80 MiB</td><td><b>24.00 GiB</b></td><td>刪除舊的，新建 swap</td></tr>
+<tr><td>nvme0n1p7</td><td>Fedora /boot</td><td>2.00 GiB</td><td>2.00 GiB</td><td>大小不變，往前移</td></tr>
+<tr><td>nvme0n1p8</td><td>Fedora（標籤 fedora）</td><td>28.03 GiB</td><td><b>186.36 GiB</b></td><td>往前長大</td></tr>
+</table>
+
+<h3>同一個大小，三個地方顯示的數字不一樣</h3>
+<p>Windows 和 GParted 用 1 GB = 1024 MB 計算，Fedora 的「磁碟」程式用 1 GB = 1000 MB 計算，所以數字不同但大小一樣：</p>
+<table border="1" cellspacing="0" width="100%">
+<tr><th>分割區</th><th>GParted</th><th>Windows 磁碟管理</th><th>Fedora「磁碟」程式</th></tr>
+<tr><td>Windows</td><td>300.10 GiB</td><td><b>300.1 GB</b>（目標）</td><td>322.2 GB</td></tr>
+<tr><td>修復環境</td><td>2.00 GiB</td><td>2.0 GB</td><td>2.1 GB</td></tr>
+<tr><td>新資料槽</td><td>416.67 GiB</td><td>416.67 GB</td><td>447.4 GB</td></tr>
+<tr><td>swap</td><td>24.00 GiB</td><td>（不顯示）</td><td>25.8 GB</td></tr>
+<tr><td>Fedora</td><td>186.36 GiB</td><td>（不顯示）</td><td><b>200.1 GB</b>（目標）</td></tr>
+</table>
+
+<h3>為什麼可以刪掉舊 RECOVERY（p6）</h3>
+<p>2026-10-22 唯讀檢查確認：裡面只有一份 2019 年 Windows 10 時代的舊修復環境（Winre.wim），現在的 Windows 11 24H2 用的是 p4（Windows 設定檔 ReAgent.xml 記錄的位置正好是 p4 的起點）。p6 是以前 Windows 改版時留下、早就沒在用的分割區。內容 Acronis 整碟備份都有。</p>
+
+<h3>操作順序總覽</h3>
+<table border="1" cellspacing="0" width="100%">
+<tr><th>階段</th><th>在哪裡做</th><th>內容</th></tr>
+<tr><td>第一階段</td><td>Windows</td><td>暫時關閉 Windows 修復環境，然後關機</td></tr>
+<tr><td>第二階段</td><td>GParted Live 隨身碟</td><td>開機進入 GParted</td></tr>
+<tr><td>第三階段</td><td>GParted</td><td>確認畫面跟手冊一致</td></tr>
+<tr><td>第四階段</td><td>GParted</td><td>8 個分割操作，每做一個就套用一次</td></tr>
+<tr><td>第五階段</td><td>Fedora</td><td>開機確認，請 Claude 檢查</td></tr>
+<tr><td>第六階段</td><td>Windows</td><td>開機確認，重新開啟修復環境</td></tr>
+</table>
+
+<h2>二、動工前檢查清單</h2>
+<table border="1" cellspacing="0" width="100%">
+<tr><th>項目</th><th>確認</th></tr>
+<tr><td>三層備份已完成並驗證（Acronis 兩份備份皆驗證成功）</td><td>□</td></tr>
+<tr><td>GParted Live 隨身碟已做好</td><td>□</td></tr>
+<tr><td><b>筆電插上充電器</b>，整個過程都不要拔</td><td>□</td></tr>
+<tr><td><b>先把這份 PDF 存到手機或另一台電腦並打開</b>（460 GB 外接硬碟等一下要拔掉，手冊不能只放在那顆上）</td><td>□</td></tr>
+<tr><td><b>拔掉其他所有隨身碟和外接硬碟</b>（包括 ACRONIS_MED 那支和 460 GB 外接硬碟），只留 GParted Live 隨身碟。這樣 GParted 裡只會看到兩顆磁碟，不會選錯</td><td>□</td></tr>
+<tr><td>預留時間：全部做完大約 1 小時，其中搬 Fedora 那一步最久</td><td>□</td></tr>
+</table>
+
+<h2>三、第一階段：Windows 準備</h2>
+
+<h3>為什麼要做</h3>
+<p>Windows 的修復環境（進階啟動、重設這台電腦等功能）放在 p4。Windows 是用「從硬碟開頭算起的位置」記住 p4 在哪裡（設定檔裡記錄的位置是 321233354752 位元組，正好是 p4 目前的起點）。這次 p4 要往後移，這個數字就會對不上。先把修復環境暫時關閉，Windows 會把它收回 C 槽保管；分割做完再重新開啟，Windows 就會把它放回 p4 的新位置。</p>
+
+<h3>步驟</h3>
+<ol>
+<li>開機時出現 GRUB 選單（黑底、上面寫「GRUB version 2.12」、有好幾行可以選），用方向鍵 <b>↓</b> 選到「<b>Windows Boot Manager (on /dev/nvme0n1p2)</b>」，按 Enter</li>
+<li>按開始，搜尋 <code>cmd</code>，在「命令提示字元」上按右鍵 →「<b>以系統管理員身分執行</b>」</li>
+<li>先查看目前狀態，輸入：
+<pre>reagentc /info</pre>
+預期看到：<br>
+「Windows RE 狀態：<b>Enabled</b>」<br>
+「Windows RE 位置：<code>\\?\GLOBALROOT\device\harddisk0\partition4\Recovery\WindowsRE</code>」<br>
+<b>用手機拍下這個畫面。</b></li>
+<li>暫時關閉修復環境，輸入：
+<pre>reagentc /disable</pre>
+預期看到「REAGENTC.EXE: 作業成功」</li>
+<li>再查一次，輸入：
+<pre>reagentc /info</pre>
+預期「Windows RE 狀態」變成 <b>Disabled</b>，位置變成空白。<b>拍照。</b></li>
+<li><b>用「關機」關閉 Windows。</b><span class="warn">不要用「休眠」或「睡眠」。</span>（休眠的話 GParted 會拒絕調整 Windows 分割區）</li>
+</ol>
+
+<p><b>如果 reagentc /disable 失敗：</b>拍照，不要繼續，關機回 Fedora 找 Claude。</p>
+
+<h2>四、第二階段：開機進入 GParted Live</h2>
+<ol>
+<li>確認筆電已關機、充電器已插上，插入 GParted Live 隨身碟</li>
+<li>按電源鍵，<b>看到 ASUS 標誌時連續按 <code>ESC</code></b>，叫出開機選單</li>
+<li>選擇隨身碟（通常是「UEFI:」開頭加隨身碟品牌名稱），按 Enter</li>
+<li>出現 GParted Live 選單，選第一項「<b>GParted Live (Default settings)</b>」，按 Enter</li>
+<li>出現「Configuring console-data」鍵盤設定畫面：直接按 <b>Enter</b>（使用預設的「Don't touch keymap」）</li>
+<li>出現「Which language do you prefer」語言選擇：直接按 <b>Enter</b>（預設英文，手冊裡的按鈕名稱都以英文為準）</li>
+<li>出現「Which mode do you prefer」：直接按 <b>Enter</b>（預設 0，啟動圖形介面）</li>
+<li>出現桌面，GParted 會自動開啟</li>
+</ol>
+
+<h4>開不起來的情況</h4>
+<ul>
+<li><b>開機選單裡沒有隨身碟：</b>重新插拔隨身碟、換一個 USB 孔再試</li>
+<li><b>出現其他錯誤畫面：</b>這台的 Secure Boot 是關閉的，不會有 Secure Boot 問題。出現任何錯誤就拍照，關機回 Fedora 找 Claude，<span class="warn">不要自己進 BIOS 改設定</span></li>
+</ul>
+
+<h2>五、第三階段：確認畫面</h2>
+<ol>
+<li>GParted 視窗右上角有磁碟選單，確認選的是 <b><code>/dev/nvme0n1 (931.51 GiB)</code></b>。<br>
+選單裡應該只有兩顆：<code>/dev/nvme0n1</code>（931.51 GiB）和隨身碟（通常是 <code>/dev/sda</code>，容量是你隨身碟的大小）。<span class="warn">絕對不要對隨身碟做任何操作。</span></li>
+<li>對照下表，確認分割區清單一模一樣（數字可能有小數點後一位的差異）：
+<table border="1" cellspacing="0" width="100%">
+<tr><th>Partition</th><th>File System</th><th>Label</th><th>Size</th></tr>
+<tr><td>/dev/nvme0n1p1</td><td>unknown</td><td></td><td>128.00 MiB</td></tr>
+<tr><td>/dev/nvme0n1p2</td><td>fat32</td><td>SYSTEM</td><td>260.00 MiB</td></tr>
+<tr><td>/dev/nvme0n1p3</td><td>ntfs</td><td>OS</td><td>298.79 GiB</td></tr>
+<tr><td>/dev/nvme0n1p4</td><td>ntfs</td><td></td><td>1.31 GiB</td></tr>
+<tr><td>/dev/nvme0n1p5</td><td>ntfs</td><td></td><td>600.20 GiB</td></tr>
+<tr><td>/dev/nvme0n1p6</td><td>ntfs</td><td>RECOVERY</td><td>822.80 MiB</td></tr>
+<tr><td>/dev/nvme0n1p7</td><td>ext4</td><td></td><td>2.00 GiB</td></tr>
+<tr><td>/dev/nvme0n1p8</td><td>btrfs</td><td>fedora</td><td>28.03 GiB</td></tr>
+</table>
+另外可能看到一兩行很小的「unallocated」（未配置空間，幾 MiB 以下），那是正常的。</li>
+<li>確認<b>沒有任何分割區名稱旁邊有鑰匙（鎖頭）圖示</b>。有鑰匙代表正在使用中，無法調整。</li>
+<li>p1 旁邊可能有黃色驚嘆號，那是因為微軟保留區沒有檔案系統，<b>正常</b>。</li>
+</ol>
+<p><span class="warn">清單跟上表對不起來（多一個、少一個、大小差很多）→ 停手，拍照，關機回 Fedora 找 Claude。</span></p>
+
+<h2>六、第四階段：分割操作（共 8 步）</h2>
+
+<h3>通用操作說明（每一步都會用到）</h3>
+<ul>
+<li><b>選分割區：</b>在清單中用滑鼠左鍵點一下那一行</li>
+<li><b>調整大小／移動：</b>在那一行按<b>右鍵</b> →「<b>Resize/Move</b>」。會跳出對話框，裡面有三個數字欄位：
+<table border="1" cellspacing="0" width="100%">
+<tr><th>欄位（英文）</th><th>意思</th></tr>
+<tr><td>Free space preceding (MiB)</td><td>這個分割區<b>前面</b>要留多少空白</td></tr>
+<tr><td>New size (MiB)</td><td>這個分割區的<b>新大小</b></td></tr>
+<tr><td>Free space following (MiB)</td><td>這個分割區<b>後面</b>要留多少空白</td></tr>
+</table>
+<b>在欄位裡輸入數字後，一定要按一下 <code>Tab</code> 鍵</b>，其他欄位才會自動更新。<br><b>下方「Align to」維持「MiB」不要改。</b>這個選項會讓每個分割區的起點都落在 1 MiB 的整數倍上，也就是 SSD 的「4K 對齊」。改掉的話，分割區可能沒對齊，SSD 每次讀寫都要多碰一個內部區塊，速度變慢、磨損變多。<br><b>數字差 1 是正常的：</b>GParted 會自動把位置調到 1 MiB 的整數倍，所以各步驟看到的數字可能跟手冊差 1（例如 613378 變成 613379），這不影響結果，也不會破壞對齊。差 2 以上才算「對不上」。</li>
+<li><b>套用：</b>每做完一步，按上方工具列的<b>綠色勾勾</b>（Apply All Operations）。會跳出確認視窗，警告編輯分割區可能造成資料遺失，按「<b>Apply</b>」。進度視窗跑完會顯示「<b>All operations successfully completed</b>」，按「<b>Close</b>」。</li>
+<li><b>移動分割區時的警告：</b>移動 p4、p7、p8 時，GParted 會跳出「Moving a partition might cause your operating system to fail to boot」（移動分割區可能導致作業系統無法開機）。<b>這是預期中的警告，按「OK」</b>。後面的階段會處理開機問題。</li>
+<li><b>套用中途：</b><span class="warn">不要關機、不要闔上螢幕、不要拔隨身碟、不要拔充電器。</span>螢幕變黑的話動一下滑鼠即可。</li>
+</ul>
+
+<h3>步驟 1：刪除舊資料槽（p5）</h3>
+<p><b>目的：</b>空出 600 GB，後面的步驟才有空間移動分割區。</p>
+<ol>
+<li>點選 <code>/dev/nvme0n1p5</code>（ntfs，600.20 GiB）。<span class="warn">再三確認大小是 600.20 GiB。</span></li>
+<li>按右鍵 →「<b>Delete</b>」</li>
+<li>清單中 p5 那一行變成「unallocated」約 600.20 GiB</li>
+<li>按綠色勾勾套用</li>
+</ol>
+<p><b>預期時間：</b>幾秒鐘</p>
+<p><b>完成後確認：</b>p4 和 p6 之間是一大塊約 600.20 GiB 的 unallocated。</p>
+
+<h3>步驟 2：刪除舊 RECOVERY（p6）</h3>
+<p><b>目的：</b>這是早就沒在用的舊修復分割區，刪掉後它的位置之後會用來放 swap。</p>
+<ol>
+<li>點選 <code>/dev/nvme0n1p6</code>（ntfs，標籤 <b>RECOVERY</b>，822.80 MiB）。<span class="warn">確認標籤是 RECOVERY、大小是 822.80 MiB。不要點到 p4（1.31 GiB，沒有標籤）。</span></li>
+<li>按右鍵 →「<b>Delete</b>」</li>
+<li>按綠色勾勾套用</li>
+</ol>
+<p><b>預期時間：</b>幾秒鐘</p>
+<p><b>完成後確認：</b>p4 和 p7 之間是一大塊約 <b>601.00 GiB</b> 的 unallocated（剛才兩塊合在一起）。清單上已經沒有 p5、p6。</p>
+
+<h3>步驟 3：把 Windows 修復環境（p4）往後移並加大</h3>
+<p><b>目的：</b>p4 緊貼在 Windows 後面，要先往後挪出 1.31 GiB，Windows 才有空間長大；同時把 p4 從 1.31 GiB 加大到 2.00 GiB，讓之後的 Windows 修復環境更新有足夠空間。</p>
+<ol>
+<li>點選 <code>/dev/nvme0n1p4</code>（ntfs，1.31 GiB）</li>
+<li>右鍵 →「<b>Resize/Move</b>」</li>
+<li>對話框目前應該是：Free space preceding 約 <code>0</code>、New size 約 <code>1337</code></li>
+<li>把 <b>Free space preceding</b> 改成 <b><code>1340</code></b>，按 Tab</li>
+<li>把 <b>New size</b> 改成 <b><code>2048</code></b>，按 Tab</li>
+<li>確認三個欄位：Free space preceding <code>1340</code>、New size <code>2048</code>、Free space following 約 <code>613378</code></li>
+<li>按「<b>Resize/Move</b>」按鈕，出現移動警告按「OK」</li>
+<li>按綠色勾勾套用</li>
+</ol>
+<p><b>預期時間：</b>1～2 分鐘（先搬再加大）</p>
+<p><b>完成後確認：</b>p3 和 p4 之間出現約 1.31 GiB 的 unallocated；p4 顯示 <b>2.00 GiB</b>。</p>
+
+<h3>步驟 4：讓 Windows（p3）長大</h3>
+<p><b>目的：</b>Windows 從 298.79 GiB 變成 300.10 GiB。</p>
+<ol>
+<li>點選 <code>/dev/nvme0n1p3</code>（ntfs，OS，298.79 GiB）</li>
+<li>右鍵 →「<b>Resize/Move</b>」</li>
+<li>把 <b>New size</b> 改成 <b><code>307303</code></b>，按 Tab</li>
+<li>確認 <b>Free space preceding 是 <code>0</code></b>（Windows 的起點絕對不能動）、<b>Free space following 變成 <code>0</code></b>（或 1 以內）。<br>New size 如果被 GParted 自動改成 <code>307302</code>，也是正常的，大小一樣會顯示 300.10 GiB。</li>
+<li>按「<b>Resize/Move</b>」</li>
+<li>按綠色勾勾套用</li>
+</ol>
+<p><b>預期時間：</b>1～3 分鐘（GParted 會先檢查 Windows 檔案系統再調整）</p>
+<p><b>完成後確認：</b>p3 顯示 <b>300.10 GiB</b>，p3 和 p4 之間沒有 unallocated 了。</p>
+<p><b>可能的錯誤：</b>如果出現「NTFS is inconsistent」或「hibernated」（休眠中），代表 Windows 沒有完整關機。停手，拍照，關機回 Fedora 找 Claude。</p>
+
+<h3>步驟 5：把 /boot（p7）往前移</h3>
+<p><b>目的：</b>p7 往前挪，讓 Fedora 有空間往前長大。這一步同時決定了新資料槽和 swap 加起來的空間。</p>
+<ol>
+<li>點選 <code>/dev/nvme0n1p7</code>（ext4，2.00 GiB）</li>
+<li>右鍵 →「<b>Resize/Move</b>」</li>
+<li>對話框目前 Free space preceding 應該約 <code>613378</code></li>
+<li>把 <b>Free space preceding</b> 改成 <b><code>451250</code></b>，按 Tab</li>
+<li>確認 <b>New size 仍然是 <code>2048</code></b>；Free space following 變成約 <code>162128</code></li>
+<li>按「<b>Resize/Move</b>」，出現移動警告按「OK」</li>
+<li>按綠色勾勾套用</li>
+</ol>
+<p><b>預期時間：</b>1 分鐘以內</p>
+<p><b>完成後確認：</b>p4 和 p7 之間是約 <b>440.67 GiB</b> 的 unallocated（之後的資料槽＋swap）；p7 和 p8 之間是約 <b>158.33 GiB</b> 的 unallocated。</p>
+<p><b>注意：</b>從這一步開始動到 Fedora 的分割區。<span class="warn">之後任何一步出錯都不要關機</span>，讓畫面停著，用手機或另一台電腦找 Claude。</p>
+
+<h3>步驟 6：讓 Fedora（p8）往前長大 <span class="warn">（最久、最關鍵的一步）</span></h3>
+<p><b>目的：</b>Fedora 從 28.03 GiB 變成 186.36 GiB（Fedora「磁碟」程式會顯示 200.1 GB）。因為 Fedora 在硬碟最尾端，只能往前長，GParted 必須把整個 Fedora 的內容搬到新位置，約 28 GiB。</p>
+<ol>
+<li>點選 <code>/dev/nvme0n1p8</code>（btrfs，fedora，28.03 GiB）</li>
+<li>右鍵 →「<b>Resize/Move</b>」</li>
+<li>把 <b>Free space preceding</b> 改成 <b><code>0</code></b>，按 Tab</li>
+<li>確認 <b>New size 變成約 <code>190831</code></b>（190830～190832 都可以）；<b>Free space following 是 <code>0</code></b></li>
+<li>按「<b>Resize/Move</b>」，出現移動警告按「OK」</li>
+<li><span class="warn">再確認一次充電器有插著。</span></li>
+<li>按綠色勾勾套用</li>
+</ol>
+<p><b>預期時間：</b>5～15 分鐘。進度條可能停在同一個百分比很久，這是正常的。</p>
+<p><span class="warn">這一步進行中斷電或關機，Fedora 一定會損壞。千萬不要拔充電器、不要闔上螢幕、不要按電源鍵。</span></p>
+<p><b>看起來卡住時：</b>點開進度視窗裡的「<b>Details</b>」，裡面會列出正在搬的資料量。<b>數字有在變就是還在跑，繼續等。</b>數字完全不動超過 <b>1 小時</b>，才用手機或另一台電腦找 Claude 討論下一步，<span class="warn">不要自己強制關機</span>。萬一真的要強制關機，之後就得用 Acronis 備份還原。</p>
+<p><b>完成後確認：</b>p8 顯示 <b>186.36 GiB</b>，p7 和 p8 之間沒有空白了。</p>
+
+<h3>步驟 7：建立新的資料槽</h3>
+<p><b>目的：</b>在 p4 和 p7 之間的空間前段建立新的 NTFS 資料槽，Windows 會把它當成一般的資料磁碟。後段留給下一步的 swap。</p>
+<ol>
+<li>點選 p4 和 p7 之間那一行「<b>unallocated</b>」（約 440.67 GiB）。<span class="warn">確認大小約 440.67 GiB。</span></li>
+<li>右鍵 →「<b>New</b>」</li>
+<li>對話框設定：
+<table border="1" cellspacing="0" width="100%">
+<tr><th>欄位</th><th>設定</th></tr>
+<tr><td>Free space preceding</td><td><code>0</code></td></tr>
+<tr><td>New size</td><td><b><code>426674</code></b>，按 Tab</td></tr>
+<tr><td>Free space following</td><td>自動變成 <code>24576</code>（留給 swap），確認一下</td></tr>
+<tr><td>Create as</td><td>Primary Partition（預設）</td></tr>
+<tr><td>Partition name</td><td>留空</td></tr>
+<tr><td>File system</td><td><b>ntfs</b>（從下拉選單選）</td></tr>
+<tr><td>Label</td><td><code>Data</code>（這是 Windows 裡顯示的磁碟名稱，想取別的名字也可以）</td></tr>
+</table></li>
+<li>按「<b>Add</b>」</li>
+<li>按綠色勾勾套用</li>
+</ol>
+<p><b>預期時間：</b>幾秒鐘</p>
+<p><b>完成後確認：</b>出現新的 ntfs 分割區 <b>416.67 GiB</b>，標籤 Data；它和 p7 之間剩下約 <b>24.00 GiB</b> 的 unallocated。</p>
+
+<h3>步驟 8：建立 swap 分割區</h3>
+<p><b>目的：</b>給 Fedora 休眠用的空間。建好後 Fedora 不會馬上使用，之後設定休眠時才會用到。</p>
+<ol>
+<li>點選新資料槽和 p7 之間那一行「<b>unallocated</b>」（約 24.00 GiB）。<span class="warn">確認大小約 24.00 GiB。</span></li>
+<li>右鍵 →「<b>New</b>」</li>
+<li>對話框設定：
+<table border="1" cellspacing="0" width="100%">
+<tr><th>欄位</th><th>設定</th></tr>
+<tr><td>Free space preceding</td><td><code>0</code></td></tr>
+<tr><td>New size</td><td>維持預設的最大值（約 <code>24576</code>）</td></tr>
+<tr><td>Free space following</td><td><code>0</code></td></tr>
+<tr><td>Create as</td><td>Primary Partition（預設）</td></tr>
+<tr><td>Partition name</td><td>留空</td></tr>
+<tr><td>File system</td><td><b>linux-swap</b>（從下拉選單選）</td></tr>
+<tr><td>Label</td><td><code>swap</code></td></tr>
+</table></li>
+<li>按「<b>Add</b>」</li>
+<li>按綠色勾勾套用</li>
+</ol>
+<p><b>預期時間：</b>幾秒鐘</p>
+
+<h3 style="page-break-before: always">全部完成後的最終畫面</h3>
+<table border="1" cellspacing="0" width="100%">
+<tr><th>Partition</th><th>File System</th><th>Label</th><th>Size</th></tr>
+<tr><td>/dev/nvme0n1p1</td><td>unknown</td><td></td><td>128.00 MiB</td></tr>
+<tr><td>/dev/nvme0n1p2</td><td>fat32</td><td>SYSTEM</td><td>260.00 MiB</td></tr>
+<tr><td>/dev/nvme0n1p3</td><td>ntfs</td><td>OS</td><td><b>300.10 GiB</b></td></tr>
+<tr><td>/dev/nvme0n1p4</td><td>ntfs</td><td></td><td><b>2.00 GiB</b></td></tr>
+<tr><td>/dev/nvme0n1p5</td><td>ntfs</td><td>Data</td><td><b>416.67 GiB</b></td></tr>
+<tr><td>/dev/nvme0n1p6</td><td>linux-swap</td><td>swap</td><td><b>24.00 GiB</b></td></tr>
+<tr><td>/dev/nvme0n1p7</td><td>ext4</td><td></td><td>2.00 GiB</td></tr>
+<tr><td>/dev/nvme0n1p8</td><td>btrfs</td><td>fedora</td><td><b>186.36 GiB</b></td></tr>
+</table>
+<p>新資料槽和 swap 的編號應該會是 p5、p6（GPT 會依序使用空出來的編號），若顯示成其他編號也沒關係。</p>
+<p><b>用手機拍下這個最終畫面。</b></p>
+
+<h2>七、萬一出錯</h2>
+<table border="1" cellspacing="0" width="100%">
+<tr><th>狀況</th><th>怎麼做</th></tr>
+<tr><td>套用時出現紅色錯誤、或「An error occurred while applying the operations」</td><td>點開「Details」展開錯誤細節，用手機拍下所有內容。<span class="warn">不要按重試、不要繼續下一步。</span><br>步驟 1～4：關機回 Fedora 找 Claude。<br>步驟 5～8：<span class="warn">不要關機</span>，用手機或另一台電腦找 Claude。</td></tr>
+<tr><td>對話框裡的數字跟手冊對不上</td><td>按「Cancel」取消，拍照，不要套用。<br>步驟 1～4：關機回 Fedora 找 Claude。<br>步驟 5～8：不要關機，用手機或另一台電腦找 Claude。</td></tr>
+<tr><td>按錯了還沒套用</td><td>上方「<b>Edit</b>」選單 →「<b>Undo Last Operation</b>」（還原上一個操作）或「<b>Clear All Operations</b>」（清除全部未套用的操作）。<b>還沒按綠色勾勾之前，什麼都還沒真的發生。</b></td></tr>
+<tr><td>做完後開機，沒出現 GRUB 選單，而是出現 <code>grub rescue&gt;</code> 或黑底英文錯誤</td><td>拍下畫面，<span class="warn">不要在裡面輸入任何指令</span>。用手機或另一台電腦找 Claude。這通常是 GRUB 找不到搬動後的 /boot，可以修復。</td></tr>
+<tr><td>Fedora 開不了機</td><td>拍下畫面，用 GParted Live 隨身碟或 Windows 開機，不要自己修。我們有三層備份：分割表快照（GitHub repo）、Acronis 整碟備份（460 GB 外接硬碟）、Fedora 設定備份（ACRONIS_MED 隨身碟）。</td></tr>
+</table>
+
+<h2>八、第五階段：回到 Fedora 確認</h2>
+<ol>
+<li>GParted 做完後，按兩下桌面上的「<b>Exit</b>」圖示，選「<b>Shutdown</b>」關機</li>
+<li>等完全關機後，<b>拔掉 GParted Live 隨身碟</b></li>
+<li>按電源鍵正常開機。應該會出現平常的 GRUB 選單，<b>最上面一行就是 Fedora</b>，直接按 Enter（或等 5 秒自動進入）</li>
+<li>登入後打開 Claude Code（這個視窗），跟 Claude 說「<b>分割做完了</b>」，Claude 會檢查：
+<ul>
+<li>Fedora 是不是真的變成 200.1 GB</li>
+<li>btrfs 檔案系統有沒有長大到填滿分割區（有時需要再補一個指令）</li>
+<li>/boot、/boot/efi 有沒有正常掛載</li>
+<li>p4 的分割區屬性（RequiredPartition）有沒有保留</li>
+<li>swap 分割區是否建立正確（之後 04f 設定休眠會用到）</li>
+<li>建立<b>新的分割表快照</b>存進 repo（動工前那份記錄的是舊配置，之後若出問題要用新配置的快照才能還原）</li>
+</ul></li>
+</ol>
+<p><b>第一次開機可能比平常慢一點，正常。</b></p>
+
+<h2>九、第六階段：回到 Windows 確認</h2>
+<ol>
+<li>重新開機，在 GRUB 選單用方向鍵 <b>↓</b> 選到「<b>Windows Boot Manager (on /dev/nvme0n1p2)</b>」，按 Enter。這一行指向 p2（EFI 分割區），這次沒有動它，所以應該照常能進 Windows</li>
+<li>第一次開機 Windows 可能會自動檢查磁碟，<b>讓它跑完，不要中斷</b></li>
+<li>開「磁碟管理」（在開始按鈕上按右鍵 →「磁碟管理」），確認：
+<ul>
+<li>C 槽約 <b>300.1 GB</b></li>
+<li>修復磁碟分割約 <b>2.0 GB</b></li>
+<li>新的 Data 磁碟約 <b>416.67 GB</b>，有分配到磁碟機代號（通常是 D:）</li>
+<li>以前的 RECOVERY（0.8 GB）已經不在了，這是正常的</li>
+</ul>
+<b>拍照。</b></li>
+<li>用系統管理員開命令提示字元（同第一階段），重新開啟修復環境：
+<pre>reagentc /enable</pre>
+預期看到「REAGENTC.EXE: 作業成功」</li>
+<li>確認狀態：
+<pre>reagentc /info</pre>
+預期「Windows RE 狀態」是 <b>Enabled</b>，位置是 <code>...harddisk0\partition4\Recovery\WindowsRE</code>。<b>拍照。</b><br>如果位置顯示的是 <code>partition3</code>，代表 Windows 把修復環境放在 C 槽，<b>修復功能一樣能正常使用</b>，拍照回報即可，不用緊張。</li>
+<li>用「關機」或「重新啟動」回 Fedora，<span class="warn">不要用休眠</span></li>
+</ol>
+<p><b>如果 reagentc /enable 失敗：</b>Windows 本身照常使用沒問題，只是修復功能暫時不能用。拍照回 Fedora 找 Claude。</p>
+
+<h2>十、做完要回報給 Claude 的東西</h2>
+<ol>
+<li>第一階段 reagentc /info 的兩張照片（關閉前、關閉後）</li>
+<li>GParted 最終畫面的照片</li>
+<li>Windows 磁碟管理的照片</li>
+<li>第六階段 reagentc /info 的照片</li>
+<li>過程中任何錯誤或跟手冊不一樣的地方</li>
+<li>步驟 6（搬 Fedora）大約花了多久</li>
+</ol>
+
+<h2>附錄：精確數值（MiB）</h2>
+<p>給 Claude 或日後查核用。1 MiB = 1,048,576 位元組。</p>
+<table border="1" cellspacing="0" width="100%">
+<tr><th>分割區</th><th>起點（MiB）</th><th>大小（MiB）</th><th>終點（MiB）</th></tr>
+<tr><td>p3 Windows</td><td>389</td><td>307303</td><td>307692</td></tr>
+<tr><td>p4 修復環境</td><td>307692</td><td>2048</td><td>309740</td></tr>
+<tr><td>p5 新資料槽</td><td>309740</td><td>426674</td><td>736414</td></tr>
+<tr><td>p6 swap</td><td>736414</td><td>24576</td><td>760990</td></tr>
+<tr><td>p7 /boot</td><td>760990</td><td>2048</td><td>763038</td></tr>
+<tr><td>p8 Fedora</td><td>763038</td><td>190831</td><td>953869</td></tr>
+</table>
+<p>p8 的終點 953869 MiB 跟調整前相同（硬碟最尾端）。p8 大小 190831 MiB = 200,100,806,656 位元組，Fedora「磁碟」程式顯示 200.1 GB。p3 大小 307303 MiB = 300.10 GiB，Windows 顯示 300.1 GB。swap 24576 MiB = 24 GiB，依 Red Hat 對 16 GB 記憶體、需要休眠時「記憶體 × 1.5」的建議值。</p>
+
+</body></html>

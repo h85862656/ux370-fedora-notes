@@ -122,7 +122,41 @@ KINGSTON SA2000M81000G，韌體 S5Z42109。
 
 **選擇方案 A。** 決定性理由是 **btrfs 在多裝置模式下不支援 swapfile**，方案 B 會直接讓 04f 休眠做不成（除非另切獨立 swap 分割區，但那又繞回要動分割表）；而且空間分散兩塊會讓未來接手的人困惑。多一支 Live USB 換乾淨版面與可用的休眠，划算。
 
-容量規劃（**實際數字待 04b/04c 動工前最終確認**）：p5 釋出 601 GB → Fedora 取約 70 GB（29 → 100 GB）→ 資料槽重建約 500 GB，其餘保留未配置或併入資料槽。
+容量規劃（2026-10-15 初步，已被下方 2026-10-22 定案取代）：p5 釋出 601 GB → Fedora 取約 70 GB（29 → 100 GB）→ 資料槽重建約 500 GB。
+
+### 2026-10-22 更正：要搬的資料不只 3 GB
+
+上表「搬動資料量約 3 GB」是錯的。p8（Fedora）在硬碟最尾端，只能**往前**長大；分割區往前長，起點就要往前移，GParted 必須把整個 p8 的內容搬到新位置。實際要搬的是 p7 約 2 GB ＋ p8 約 28 GB（舊 p6 後來決定刪除，不必搬）。
+
+影響：這一步要 5～15 分鐘；搬到一半斷電會讓 Fedora 損壞，全程必須插充電器。方案 A 本身不變——任何讓 Fedora 變大的做法都避不開這一步（方案 B 雖然不用搬，但休眠做不成的問題不變）。
+
+### 最終配置（2026-10-22 定案）
+
+使用者指定：Windows 在 Windows 磁碟管理顯示 **300.1 GB**、Fedora 在 Fedora「磁碟」程式顯示 **200.1 GB**，空間全部從舊資料槽拿，舊資料槽刪除重建。再加上 04d、04f 的決定：刪除舊 RECOVERY、修復環境加大到 2 GiB、新增 24 GiB swap。
+
+單位注意：Windows 與 GParted 用 1 GB = 1024 MB，Fedora「磁碟」程式用 1 GB = 1000 MB。同一個 Fedora 分割區，調整前 Fedora 顯示 30 GB、Windows 顯示 28.03 GB。
+
+| 分割區 | 內容 | 調整前（GParted） | 調整後（GParted） | Windows 顯示 | Fedora「磁碟」顯示 | 做法 |
+| --- | --- | --- | --- | --- | --- | --- |
+| p1 | 微軟保留區 | 128 MiB | 128 MiB | | | 不動 |
+| p2 | EFI | 260 MiB | 260 MiB | | | 不動 |
+| p3 | Windows | 298.79 GiB | **300.10 GiB** | **300.1 GB** | 322.2 GB | 往後長大 |
+| p4 | Windows 修復環境 | 1.31 GiB | **2.00 GiB** | 2.0 GB | 2.1 GB | 往後移並加大 |
+| p5 | 資料槽 | 600.20 GiB | **416.67 GiB** | 416.67 GB | 447.4 GB | 刪除重建，標籤 `Data` |
+| p6 | 舊 RECOVERY → **swap** | 822.80 MiB | **24.00 GiB** | 不顯示 | 25.8 GB | 刪除舊的，新建 swap |
+| p7 | `/boot` | 2.00 GiB | 2.00 GiB | 不顯示 | 2.1 GB | 往前移 |
+| p8 | Fedora | 28.03 GiB | **186.36 GiB** | 不顯示 | **200.1 GB** | 往前長大 |
+
+精確的起點與大小（MiB）見操作手冊附錄。所有新起點都是整數 MiB（1 MiB 對齊，也就是 SSD 的 4K 對齊）；只有 p1 例外，見 04d。
+
+### 動工操作手冊
+
+逐步操作手冊，含每個對話框要填的數字、出錯時的處理、動工後的檢查：
+
+- repo：[`patches/04-gparted-manual/`](../../patches/04-gparted-manual/)，PDF 與 HTML 原始檔（原始檔放進 repo，是因為 `/tmp` 暫存區重開機就會被清掉，2026-10-22 已發生過一次）
+- 460 GB 外接硬碟根目錄：`GParted分割調整操作手冊_v4.pdf`（`_v2`、`_v3` 為舊版）
+
+v4 共 18 頁、6 個階段：Windows 準備（`reagentc /disable`）→ 開機進 GParted Live → 確認畫面 → 8 個分割操作，每做一個就套用一次 → 回 Fedora 由 Claude 檢查 → 回 Windows（`reagentc /enable`）。出錯處理分兩段：步驟 1～4 出錯可以關機回 Fedora；步驟 5～8 已動到 Fedora 的分割區，出錯時不要關機，改用手機或另一台電腦找 Claude。
 
 ## 04a. 施工前備份提醒
 
@@ -282,11 +316,20 @@ Windows 為了效能，把 NTFS 的中介資料大量快取在記憶體裡、不
 
 前置：清空 p5（先解除雲端同步）、完成 04a 備份。
 
+**2026-10-22 定案**：刪除後重建為 **416.67 GiB**（Windows 顯示 416.67 GB），標籤 `Data`。比原本規劃的 500 GB 小，是因為 Windows 加大到 300.1 GB、Fedora 加大到 200.1 GB，並新增 24 GiB swap。舊 RECOVERY（p6）也一併刪除，見 04d。
+
 ## 04c. Fedora 自己的空間調整到 100GB
 
 **進度與發現（2026-10-15）**：需要 Live USB。p8 位於硬碟最尾端、後方無空間，必須先把 p6（823 MB）與 p7（2 GB `/boot`）往左搬到 p5 釋出的空間，讓空缺與 p8 相鄰後才能擴大。搬動資料量僅約 3 GB。
 
 風險點：p7 是 `/boot`。搬動後需確認 GRUB 與 `/etc/fstab` 仍以 UUID 指向正確位置（分割區搬移本身會保留內容與 UUID，但必須實際驗證）。
+
+**2026-10-22 定案與更正**：
+
+- 目標改為 Fedora「磁碟」程式顯示 **200.1 GB**（= 186.36 GiB，GParted 與 Windows 顯示 186.36）。原本的 100 GB 是初步規劃。
+- 同時讓 Windows（p3）往後長大到 300.10 GiB（Windows 顯示 300.1 GB），代價是 p4 修復環境必須往後移，見 04d。
+- **上面「搬動資料量僅約 3 GB」是錯的**：p8 往前長大必須搬動整個 p8（約 28 GB），見「施工方案」的更正。
+- 上面的風險點已於 2026-10-23 查證：GRUB、核心參數、`/etc/fstab` 全部用 UUID，見 04e。
 
 ## 04d. 其他分割區調整成符合 UEFI 標準規範
 
@@ -294,15 +337,56 @@ Windows 為了效能，把 NTFS 的中介資料大量快取在記憶體裡、不
 
 另可評估 EFI 分割區（p2）只有 260 MB，略小於現行建議的 500 MB～1 GB，但目前僅用 27%，是否調整待討論。
 
+**2026-10-22 逐一評估與決定**：
+
+| 分割區 | 現況 | 標準 | 決定 |
+| --- | --- | --- | --- |
+| p1 微軟保留區 | 128 MB，起點磁區 34，沒有對齊 | Win11 新裝只建 16 MB | **不動**：沒有檔案系統、Windows 不會讀寫，沒對齊也不影響效能；要修正得刪除重建，有風險沒好處 |
+| p2 EFI | 260 MB，只用 27% | 微軟最少 100 MB；Fedora 新裝預設 600 MB | **不動**：Fedora 的核心放在 `/boot` 不放 EFI，夠用；要加大必須移動 Windows 的起點，Windows 會開不了機 |
+| p4 Windows 修復環境 | 1.31 GiB，已用 93.3%，只剩約 90 MB | 修復環境更新需要約 250 MB 空間（2024 年 KB5034441 就因空間不足安裝失敗，錯誤碼 0x80070643） | **加大到 2.00 GiB**：本來就要搬動，順便加大幾乎不增加風險 |
+| p6 RECOVERY | 823 MB，分割區類型是「一般資料」 | 不屬於標準配置 | **刪除**，理由見下 |
+| p7 `/boot` | 2 GB，用了 26% | Fedora 預設 1～2 GB | 不動 |
+| 排列順序 | 微軟保留區在 EFI 前面 | 微軟建議 EFI 在前 | **不動**：順序不影響開機，調換要動到 EFI |
+
+**p6 查證（2026-10-22，唯讀掛載）**：裡面只有 `Recovery/WindowsRE/Winre.wim`（2019-09-05，484 MB，Windows 10 時代）與其設定檔、`AsTool.State`、`LOST.DIR` 和 `.Trash`（曾被 Android 手機與 Linux 桌面當一般磁碟寫入）、`$RECYCLE.BIN`（有兩組不同 Windows 安裝的使用者編號）、`System Volume Information`（有 BitLocker 相關資料夾，曾加密、現已解密）。結論：以前 Windows 改版時留下、早就沒在用的舊修復分割區。內容 Acronis 整碟備份都有。
+
+**Windows 實際使用的修復環境是 p4**：C 槽的 `Windows\System32\Recovery\ReAgent.xml` 記錄 `WinreLocation offset="321233354752"`（以 GPT 磁碟 GUID `87c37755-…` 定位），換算成磁區是 627408896，正好是 p4 的起點。這也代表 Windows 是用「位置」記住 p4，p4 搬動後必須 `reagentc /disable` → 調整 → `reagentc /enable`。現在的 Windows 版本是 Win11 24H2（26100）。
+
+**4K 對齊（2026-10-23 查證）**：硬碟的邏輯與實體扇區都是 512 bytes。p2～p8 的起點全部 1 MiB 對齊（等於也 4K 對齊），只有 p1 沒有對齊但不影響。動工後的所有新起點都是整數 MiB；手冊註明 GParted 的「Align to」必須維持 MiB。
+
 ## 04e. 確認雙系統開機是否正常，異常要修復到能開機為止
 
-**進度與發現**：（尚無記錄；待 04b～04d 完成後進行）
+**進度與發現**：（實際驗證待 04b～04d 完成後進行）
+
+**動工前查證：開機鏈不需要修正（2026-10-23）**：
+
+| 環節 | 怎麼找下一棒 | 這次會不會受影響 |
+| --- | --- | --- |
+| 主機板 UEFI → p2 裡的 GRUB | UEFI 開機項目記錄 p2 的位置（起點 `0x40800`） | 不會，p2 不動 |
+| p2 的 `EFI/fedora/grub.cfg` → `/boot` | `search --fs-uuid ec07cacc-…`（p7 的 UUID） | 不會，搬動分割區不改 UUID |
+| `/boot/grub2/grub.cfg` | `search --fs-uuid` 找 `/boot` 與 EFI（`7BAA-6405`） | 不會 |
+| 核心 → 根目錄 | 開機參數 `root=UUID=9d957795-…` | 不會 |
+| `/etc/fstab` | 四個掛載點全部用 UUID | 不會 |
+| GRUB 選單「Windows Boot Manager (on /dev/nvme0n1p2)」→ Windows 開機程式 | `search --fs-uuid 7BAA-6405` 後執行 `/EFI/Microsoft/Boot/bootmgfw.efi`；選單上的 `/dev/nvme0n1p2` 只是顯示文字 | 不會 |
+| Windows 開機程式 → p3 | 記錄位置 | 不會，p3 只往後長大，起點不變 |
+| Windows → p4 修復環境 | 記錄位置 | **會**，以 `reagentc` 處理 |
+
+使用者平常進 Windows 的方式：開機出現 GRUB 選單（預設第一行是 Fedora），用方向鍵選「Windows Boot Manager (on /dev/nvme0n1p2)」。UEFI 裡的「Windows Boot Manager」項目是停用狀態，開機順序 Fedora 優先。
+
+萬一動工後開機出現 `grub rescue>`：拍照、不要輸入任何指令，可以修復（手冊有寫）。動工後的實際驗證步驟見操作手冊第五、六階段。
 
 ## 04f. 開啟 Fedora 的休眠（hibernate）功能
 
 **進度與發現（2026-10-15）**：目前**無法休眠**——系統只有 zram 8 GB，沒有實體 swap。RAM 為 15 GB，休眠需要約 16 GB 的 swap 空間，規劃 04c 的 100 GB 時必須含進去。
 
 採用方案 A 的另一個原因就在這裡：方案 A 讓 p8 維持單一裝置，可以直接用 btrfs swapfile；方案 B 的多裝置 btrfs 不支援 swapfile。
+
+**2026-10-22 更新**：
+
+- **Secure Boot 是關閉的**（`mokutil --sb-state`：SecureBoot disabled、Platform is in Setup Mode），核心沒有啟用 lockdown（`/sys/kernel/security/lockdown` 為 `[none]`）。Fedora 在 Secure Boot 開啟時會因 lockdown 封鎖休眠，這台沒有這個問題，技術上可以休眠。
+- **改用獨立 swap 分割區，不用 btrfs swapfile**：這次本來就在重新分割，順便切一塊最省事；設定比 btrfs swapfile 簡單、限制少，也不佔 Fedora 的 200.1 GB。
+- **大小 24 GiB**：記憶體實體 16 GB（系統顯示 15 GB）。一般情況 16 GB 就夠（休眠前系統會先丟掉快取、寫入的內容會壓縮），但記憶體幾乎全滿又壓縮不下時可能不夠，那時休眠會失敗（不會損壞）。採用 Red Hat 對「需要休眠」時「記憶體 × 1.5」的建議值；Ubuntu 的建議（記憶體 + √記憶體）是 20 GB。
+- swap 分割區在 GParted 步驟 8 建立，標籤 `swap`。建好後 Fedora 不會自動使用，要在 04f 實作時另外設定（fstab、resume 參數等）。
 
 ## 04g. 04a~04f 都完成後，再討論要不要挪一塊空間裝 Chrome OS Flex 或 Android-x86
 
@@ -317,7 +401,7 @@ Windows 為了效能，把 NTFS 的中介資料大量快取在記憶體裡、不
 - **CPU**：0。分割調整是一次性操作，完成後沒有任何東西持續執行。
 - **RAM**：0。同上。
 - **續航**：**預期略為改善。** 兩個原因：(1) 目前磁碟 98% 滿，btrfs 在接近全滿時配置區塊的成本上升、也無法有效做 discard/trim，空間充裕後寫入行為更有效率；(2) 04f 的休眠完成後，長時間不用可改用休眠取代待機，待機每小時仍有數瓦耗電，休眠則幾乎為零。
-- 休眠會佔用約 16 GB 磁碟空間作為 swap——這是磁碟成本，不是 CPU/RAM/耗電成本。
+- 休眠用的 swap 分割區佔用 24 GiB 磁碟空間（2026-10-22 定案，原估 16 GB）——這是磁碟成本，不是 CPU/RAM/耗電成本。
 
 ## 附錄：備份工具比較（2026-10-15 評估）
 
