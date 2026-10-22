@@ -1,0 +1,19 @@
+Disk /dev/nvme0n1: 1953525168 sectors, 931.5 GiB
+Model: KINGSTON SA2000M81000G                  
+Sector size (logical/physical): 512/512 bytes
+Disk identifier (GUID): 87C37755-4875-45C8-828B-8A0436221D88
+Partition table holds up to 128 entries
+Main partition table begins at sector 2 and ends at sector 33
+First usable sector is 34, last usable sector is 1953525134
+Partitions will be aligned on 8-sector boundaries
+Total free space is 3437 sectors (1.7 MiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1              34          262177   128.0 MiB   0C01  
+   2          264192          796671   260.0 MiB   EF00  EFI System Partition
+   3          796672       630153215   300.1 GiB   0700  
+   4       630153216       634347519   2.0 GiB     2700  
+   5       634347520      1508175871   416.7 GiB   0700  
+   6      1508175872      1558507519   24.0 GiB    8200  
+   7      1558507520      1562701823   2.0 GiB     8300  
+   8      1562701824      1953523711   186.4 GiB   8300  
