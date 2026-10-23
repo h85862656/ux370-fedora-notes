@@ -7,7 +7,7 @@
 
 - 機型：ASUS ZenBook UX370UAR
 - 系統：Fedora 44
-- 桌面環境：GNOME Shell 50.3（2026-08-05 確認）
+- 桌面環境：GNOME Shell 50.6（2026-10-24 確認）
 
 ## 項目清單 Issues
 
@@ -75,7 +75,7 @@ issues/on-hold/      暫緩 On Hold
   - GNOME Shell 擴充套件：只在 `enable()` 執行一次就結束的（例如 [issues/complete/11-hide-dark-mode-toggle.md](issues/complete/11-hide-dark-mode-toggle.md)）成本趨近零；有計時器或長期訊號監聽的要說明為什麼非要不可。
 - **repo 既有慣例**：`issues/to-do/`、`issues/in-progress/`、`issues/complete/`、`issues/blocked/`、`issues/on-hold/` 五種狀態各對應一個資料夾（沒有項目的狀態，資料夾就不會存在，見上方說明），項目本身不分「bug」還是「功能」，狀態改變就把檔案 `git mv` 到對應資料夾；`patches/` 放實際可套用的 patch 檔或完整備份檔；`reference/` 放跨平台/跨機器的參考資料（不是這台機器專屬的問題）。
 - **主機名稱已固定**：2026-07-22 設定固定主機名稱為 `thomas-fedora`（pretty: `Thomas-Fedora`），起因跟細節見 [issues/complete/10-chrome-hostname-lock.md](issues/complete/10-chrome-hostname-lock.md)。之前因為沒設固定名稱，NetworkManager 會用反解 IP 動態改名，可能影響任何依賴主機名稱穩定性的程式（不只 Chrome）。
-- **風險等級**：[issues/to-do/04-ssd-repartition.md](issues/to-do/04-ssd-repartition.md)（磁碟分割調整）具有破壞性，資料遺失風險高，處理前必須先完成備份要求，見該檔案說明。
+- **風險等級**：[issues/in-progress/04-ssd-repartition.md](issues/in-progress/04-ssd-repartition.md)（磁碟分割調整）具有破壞性，資料遺失風險高，處理前必須先完成備份要求，見該檔案說明。
 
 ### 多視窗協作規則
 
